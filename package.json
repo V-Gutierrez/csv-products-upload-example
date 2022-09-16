@@ -1,0 +1,11 @@
+{
+  "name": "lm-brasil-test",
+  "version": "1.0.0",
+  "description": "Backend test for Leroy Merlin Brasil",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Victor Gutierrez",
+  "license": "ISC"
+}
