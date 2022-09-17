@@ -2,4 +2,3 @@ node_modules
 .history
 coverage
 *.csv
-prisma/dev.db
