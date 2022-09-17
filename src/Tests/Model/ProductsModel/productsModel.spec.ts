@@ -1,9 +1,10 @@
 import PrismaClientInstance from '@Clients/Prisma/'
 import ProductsModel from '@Models/Products';
+import { productSample } from '@Tests/mocks';
 
 describe('Products Model tests', () => {
   const PrismaClientMock = jest.fn()
-  const productSample = { category: 1, free_shipping: true, lm: 1, description: "This is my test product", name: "Furadeira Lavadeira", price: 123.42 }
+
 
   beforeAll(() => {
     jest.clearAllMocks()

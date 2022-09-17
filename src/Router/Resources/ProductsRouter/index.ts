@@ -1,3 +1,4 @@
+import ProductsModel from '@Models/Products'
 import { Express } from 'express'
 
 /* It's a router for the products resource */
@@ -10,9 +11,11 @@ export default class ProductsRouter {
   getAll() {
     const route = '/resources/products'
 
-    this.app.get(route, (_req, res) => {
+    this.app.get(route, async (_req, res) => {
       try {
-        res.status(200).json([])
+        const products = await ProductsModel.getAll()
+
+        res.status(200).json(products)
       } catch (error) {
         res.status(500).json({ error: 'An error occurred while getting all products' })
       }

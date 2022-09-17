@@ -105,6 +105,9 @@
       ],
       "@Models/*": [
         "src/Models/*"
+      ],
+      "@Tests/*": [
+        "src/Tests/*"
       ]
     }, /* Skip type checking all .d.ts files. */
   },
