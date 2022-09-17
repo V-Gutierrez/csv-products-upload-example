@@ -10,7 +10,7 @@ export default class ProductsRouter {
   getAll() {
     const route = '/resources/products'
 
-    this.app.get(route, (req, res) => {
+    this.app.get(route, (_req, res) => {
       try {
         res.status(200).json([])
       } catch (error) {
