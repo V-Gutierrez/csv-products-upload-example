@@ -14,6 +14,18 @@ class ProductsModel {
       // TODO: improve error logging
     }
   }
+
+  async getAll() {
+    try {
+      const allProducts = await PrismaClientInstance.product.findMany()
+
+      return allProducts
+    } catch (error) {
+      console.error(error)
+      // TODO: improve error logging
+      return []
+    }
+  }
 }
 
 export default new ProductsModel()
