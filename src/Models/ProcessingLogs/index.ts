@@ -4,7 +4,7 @@ import PrismaClientInstance from '@Clients/Prisma/index'
 class ProccessingLogsModel {
   async create(newLog?: Prisma.ProccessingLogsCreateInput) {
     try {
-      const log = await PrismaClientInstance.proccessingLogs.create({ data: newLog || {}, })
+      const log = await PrismaClientInstance.proccessingLogs.create({ data: newLog || {} })
 
       return log.id
     } catch (error) {
@@ -14,6 +14,5 @@ class ProccessingLogsModel {
     }
   }
 }
-
 
 export default new ProccessingLogsModel()

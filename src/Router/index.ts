@@ -1,4 +1,3 @@
-
 import { Express } from 'express'
 import Middlewares from '@Middlewares/index'
 import ProductsRouter from '@Router/Resources/ProductsRouter'

@@ -1,10 +1,9 @@
 import ProductsModel from '@Models/Products'
 import Router from '@Router/index'
-import request from 'supertest';
-import express from 'express';
-import ProductsRouter from '@Router/Resources/ProductsRouter';
-import { productSample } from '@Tests/mocks';
-
+import request from 'supertest'
+import express from 'express'
+import ProductsRouter from '@Router/Resources/ProductsRouter'
+import { productSample } from '@Tests/mocks'
 
 const AppInstance = express()
 const RouterInstance = new Router(AppInstance)
@@ -19,14 +18,14 @@ describe('Product Resource Routes', () => {
     const ProductsModelMock = jest.fn()
     const expectedResponse = [productSample]
 
-    jest.spyOn(ProductsModel, 'getAll')
+    jest
+      .spyOn(ProductsModel, 'getAll')
       .mockImplementation(ProductsModelMock)
       .mockResolvedValue(expectedResponse)
 
-    const response = await request(ExpressInstance).get(GET_ALL_ROUTE);
+    const response = await request(ExpressInstance).get(GET_ALL_ROUTE)
 
-    expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual(expectedResponse);
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toEqual(expectedResponse)
   })
-
 })
