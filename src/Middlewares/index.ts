@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import express, { Express } from 'express'
 import morgan from 'morgan'
 import multer from 'multer'
