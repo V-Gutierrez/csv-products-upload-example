@@ -11,19 +11,16 @@ datasource db {
 }
 
 model Product {
-  lm              Int               @unique
-  name            String
-  free_shipping   Boolean
-  description     String
-  price           Float
-  category        Int
-  ProccessingLogs ProccessingLogs[]
+  lm            Int     @unique
+  name          String
+  free_shipping Boolean
+  description   String
+  price         Float
+  category      Int
 }
 
 model ProccessingLogs {
   id        String   @unique @default(cuid())
-  ready     Boolean
-  product   Product  @relation(fields: [productId], references: [lm])
-  productId Int      @unique
+  ready     Boolean  @default(false)
   createdAt DateTime @default(now())
 }

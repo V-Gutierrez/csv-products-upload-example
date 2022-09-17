@@ -11,6 +11,7 @@ describe('Products Model test', () => {
 
   it('should add products properly', () => {
     const inputSample = [productSample, productSample]
+    
     jest.spyOn(PrismaClientInstance.product, 'create').mockImplementation(PrismaClientMock)
 
     ProductsModel.bulkCreate([productSample, productSample])
