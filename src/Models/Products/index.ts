@@ -11,6 +11,7 @@ class ProductsModel {
       await Promise.all(bulkCreation)
     } catch (error) {
       console.error(error)
+      // TODO: improve error logging
     }
   }
 }
