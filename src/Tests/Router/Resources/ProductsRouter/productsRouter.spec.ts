@@ -1,17 +1,23 @@
 import Router  from '@Router/index'
 import request from 'supertest';
 import express from 'express';
+import { ProductsRouter } from '@Router/Resources/ProductsRouter';
 
-const newRouterInstance = new Router(express())
-const expressInstance = newRouterInstance.useExpressInstance()
+const AppInstance = express()
+const RouterInstance = new Router(AppInstance)
 
-describe('Product Resource Routes', function () {
-  test('responds to /resources/products with products', async () => {
-    const response = await request(expressInstance)
-      .get('/resources/products');
+const ExpressInstance = RouterInstance.useExpressInstance()
+const TestedRouterInstance = new ProductsRouter(ExpressInstance)
+
+const GET_ALL_ROUTE = TestedRouterInstance.getAll()
+
+describe('Product Resource Routes', () => {
+
+  test(`responds to ${GET_ALL_ROUTE} with all available products`, async () => {
+    const response = await request(ExpressInstance).get(GET_ALL_ROUTE);
 
     expect(response.statusCode).toBe(200);
-    expect(response.text).toEqual(JSON.stringify([]));
-  });
+    expect(response.body).toEqual([]);
+  })
 
-});
+})
