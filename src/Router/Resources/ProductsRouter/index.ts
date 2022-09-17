@@ -11,6 +11,10 @@ export default class ProductsRouter {
     this.uploadProducts()
   }
 
+  /**
+   * It creates a route that returns all products from the database
+   * @returns An object with the route and method
+   */
   getAll() {
     const params = { route: '/resources/products', method: 'GET' }
 
@@ -27,9 +31,12 @@ export default class ProductsRouter {
     return params
   }
 
+ /**
+  * It creates a new log entry in the database, then sends the file to a queue for processing
+  * @returns An object with the route and method of the endpoint.
+  */
   uploadProducts() {
     const params = { route: '/resources/products', method: 'POST' }
-
 
     this.app.post(params.route, Middlewares.singleFileUpload('products_csv'), async (req, res) => {
       try {

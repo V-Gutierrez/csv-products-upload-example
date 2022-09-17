@@ -10,6 +10,13 @@ export default class Middlewares {
     this.app.use(morgan('combined'))
   }
 
+  /**
+   * It returns a function that accepts a formDataKey and returns a function that accepts a request and
+   * response object
+   * @param {string} formDataKey - The key of the form data that you want to upload.
+   * @returns A function that takes a formDataKey as an argument and returns a middleware function that
+   * will handle a single file upload.
+   */
   static singleFileUpload(formDataKey: string) {
     return multer().single(formDataKey)
   }
