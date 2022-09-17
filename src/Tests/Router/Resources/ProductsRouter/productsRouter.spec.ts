@@ -1,7 +1,7 @@
-import Router  from '@Router/index'
+import Router from '@Router/index'
 import request from 'supertest';
 import express from 'express';
-import { ProductsRouter } from '@Router/Resources/ProductsRouter';
+import ProductsRouter from '@Router/Resources/ProductsRouter';
 
 const AppInstance = express()
 const RouterInstance = new Router(AppInstance)

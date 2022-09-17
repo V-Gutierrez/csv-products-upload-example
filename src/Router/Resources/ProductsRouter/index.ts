@@ -1,8 +1,9 @@
 import { Express } from 'express'
 
 /* It's a router for the products resource */
-export class ProductsRouter {
+export default class ProductsRouter {
   constructor(private readonly app: Express) {
+    this.app = app
     this.getAll()
   }
 
@@ -13,12 +14,10 @@ export class ProductsRouter {
       try {
         res.status(200).json([])
       } catch (error) {
-        res.status(500).json({error: "An error occurred while getting all products"})
+        res.status(500).json({ error: 'An error occurred while getting all products' })
       }
     })
 
     return route
   }
-
-
 }
