@@ -6,7 +6,7 @@ export class ProductsRouter {
   }
 
   getAll() {
-    this.app.get('/resources/products', (req, res) => {
+    return this.app.get('/resources/products', (req, res) => {
       try {
         res.status(200).json([])
       } catch (error) {
