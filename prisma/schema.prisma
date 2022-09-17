@@ -10,11 +10,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Products {
-  lm            Int     @unique
-  name          String
-  free_shipping Boolean
-  description   String
-  price         Float
-  category      Int
+model Product {
+  lm              Int               @unique
+  name            String
+  free_shipping   Boolean
+  description     String
+  price           Float
+  category        Int
+  ProccessingLogs ProccessingLogs[]
+}
+
+model ProccessingLogs {
+  id        String   @unique @default(cuid())
+  ready     Boolean
+  product   Product  @relation(fields: [productId], references: [lm])
+  productId Int      @unique
+  createdAt DateTime @default(now())
 }
