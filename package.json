@@ -6,7 +6,9 @@
   "scripts": {
     "test": "jest --watchAll --coverage",
     "start:dev": "nodemon src/index.ts",
-    "swagger-autogen": "node swagger.js"
+    "prisma:generate": "npx prisma generate",
+    "prisma:studio": "npx prisma studio",
+    "prisma:migrate:dev": "npx prisma migrate dev"
   },
   "author": "Victor Gutierrez",
   "license": "ISC",
@@ -42,6 +44,7 @@
     "typescript": "^4.8.3"
   },
   "dependencies": {
+    "@prisma/client": "^4.3.1",
     "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "morgan": "^1.10.0",
