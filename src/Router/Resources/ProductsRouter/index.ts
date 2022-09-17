@@ -12,9 +12,9 @@ export default class ProductsRouter {
   }
 
   getAll() {
-    const route = '/resources/products'
+    const params = { route: '/resources/products', method: 'GET' }
 
-    this.app.get(route, async (_req, res) => {
+    this.app.get(params.route, async (_req, res) => {
       try {
         const products = await ProductsModel.getAll()
 
@@ -24,13 +24,14 @@ export default class ProductsRouter {
       }
     })
 
-    return route
+    return params
   }
 
   uploadProducts() {
-    const route = '/resources/products'
+    const params = { route: '/resources/products', method: 'POST' }
 
-    this.app.post(route, Middlewares.singleFileUpload('products_csv'), async (req, res) => {
+
+    this.app.post(params.route, Middlewares.singleFileUpload('products_csv'), async (req, res) => {
       try {
         // const { file } = req
         const log = await ProccessingLogsModel.create()
@@ -43,6 +44,6 @@ export default class ProductsRouter {
       }
     })
 
-    return route
+    return params
   }
 }
