@@ -46,9 +46,9 @@ export default class ProductsRouter {
         const log = await ProccessingLogsModel.create()
 
         // if(!file) res.status(400).json({ message: 'Invalid request. Upload file is missing'})
-        // else if(fileExtension !== 'csv) res.status(400).json({ message: 'Invalid file type.'})
+        // else if(fileExtension !== 'csv') res.status(400).json({ message: 'Invalid file type.'})
         // else {
-        // Send file to queue
+        // Send file to queue the operation: READ, VALIDATE FORMAT, PARSE, AND WRITE IN DB
         // }
 
 
