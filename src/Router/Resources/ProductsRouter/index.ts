@@ -31,19 +31,26 @@ export default class ProductsRouter {
     return params
   }
 
- /**
-  * It creates a new log entry in the database, then sends the file to a queue for processing
-  * @returns An object with the route and method of the endpoint.
-  */
+  /**
+   * It creates a new log entry in the database, then sends the file to a queue for processing
+   * @returns An object with the route and method of the endpoint.
+   */
   uploadProducts() {
     const params = { route: '/resources/products', method: 'POST' }
 
     this.app.post(params.route, Middlewares.singleFileUpload('products_csv'), async (req, res) => {
       try {
         // const { file } = req
+        // const { 1: fileExtension } = file?.originalname.split('.') as string[]
+
         const log = await ProccessingLogsModel.create()
 
+        // if(!file) res.status(400).json({ message: 'Invalid request. Upload file is missing'})
+        // else if(fileExtension !== 'csv) res.status(400).json({ message: 'Invalid file type.'})
+        // else {
         // Send file to queue
+        // }
+
 
         res.status(202).json({ message: 'File successfully uploaded', jobId: log })
       } catch (error) {
