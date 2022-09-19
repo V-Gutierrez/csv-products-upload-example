@@ -40,19 +40,22 @@ export default class ProductsRouter {
 
     this.app.post(params.route, Middlewares.singleFileUpload('products_csv'), async (req, res) => {
       try {
-        // const { file } = req
-        // const { 1: fileExtension } = file?.originalname.split('.') as string[]
-
-        const log = await ProccessingLogsModel.create()
-
-        // if(!file) res.status(400).json({ message: 'Invalid request. Upload file is missing'})
-        // else if(fileExtension !== 'csv') res.status(400).json({ message: 'Invalid file type.'})
-        // else {
-        // Send file to queue the operation: READ, VALIDATE FORMAT, PARSE, AND WRITE IN DB
-        // }
+        const { file } = req
+        const { 1: fileExtension } = file?.originalname.split('.') as string[] ?? {}
 
 
-        res.status(202).json({ message: 'File successfully uploaded', jobId: log })
+        if (!file?.filename) res.status(400).json({ error: 'Invalid request. Upload file is missing' })
+        else if (fileExtension !== 'csv') res.status(400).json({ error: 'Invalid file type.' })
+        else {
+          const log = await ProccessingLogsModel.create()
+
+          /*  CSVReader.readFile(file.path, (_, data) => {
+             const isCSVValid = CSVReader.validateSchema(data[0], data[0])
+             if (isCSVValid) ProductsModel.createInBulkWithCSV(data)
+           }) CODE TO QUEUE */
+
+          res.status(202).json({ message: 'File successfully uploaded', jobId: log })
+        }
       } catch (error) {
         res.status(500).json({ error: 'An error occurred while uploading file' })
       }
