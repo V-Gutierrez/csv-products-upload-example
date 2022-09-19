@@ -2,7 +2,10 @@ import Middlewares from '@Middlewares/index'
 import ProductsModel from '@Models/Products'
 import ProccessingLogsModel from '@Models/ProcessingLogs/index'
 import { Express } from 'express'
+import CSVReader from '@Services/CSVReader'
+import PQueue from 'p-queue';
 
+const queue = new PQueue({ concurrency: 1 });
 /* It's a router for the products resource */
 export default class ProductsRouter {
   constructor(private readonly app: Express) {
@@ -49,10 +52,12 @@ export default class ProductsRouter {
         else {
           const log = await ProccessingLogsModel.create()
 
-          /*  CSVReader.readFile(file.path, (_, data) => {
-             const isCSVValid = CSVReader.validateSchema(data[0], data[0])
-             if (isCSVValid) ProductsModel.createInBulkWithCSV(data)
-           }) CODE TO QUEUE */
+          queue.add(() => {
+            CSVReader.readFile(file.path, (_, data) => {
+              const isCSVValid = CSVReader.validateSchema(data[0], data[0])
+              if (isCSVValid) ProductsModel.createInBulkWithCSV(data)
+            })
+          })
 
           res.status(202).json({ message: 'File successfully uploaded', jobId: log })
         }

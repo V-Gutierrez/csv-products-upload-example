@@ -5,22 +5,16 @@ import PrismaClientInstance from '@Clients/Prisma/index'
 class ProductsModel {
   async bulkCreate(products: Prisma.ProductCreateInput[]) {
     try {
-      const bulkCreation = products.map(async (item) =>
-        PrismaClientInstance.product.upsert({
-          create: {
-            ...item
-          },
-          update: {
-            ...item
-          },
-          where: {
-            lm: item.lm
-          },
+      await Promise.all(products.map(async (item) =>
+        PrismaClientInstance.product.create({
+          data: item
         })
-      )
-
-      await Promise.all(bulkCreation)
+      ))
     } catch (error) {
+      const { code } = error as any
+      // If Products already exists do not halt application
+      if (code === 'P2002') return
+      
       throw new Error('bulkCreate error')
     }
   }

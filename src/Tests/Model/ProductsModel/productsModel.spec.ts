@@ -12,12 +12,28 @@ describe('Products Model tests', () => {
   it('should add products properly', async () => {
     const inputSample = [productSample, productSample]
 
-    jest.spyOn(PrismaClientInstance.product, 'upsert').mockImplementation(PrismaClientMock)
+    jest.spyOn(PrismaClientInstance.product, 'create').mockImplementation(PrismaClientMock)
 
-    await ProductsModel.bulkCreate([productSample, productSample])
+    await ProductsModel.bulkCreate(inputSample)
 
     expect(PrismaClientMock).toBeCalledTimes(inputSample.length)
-    expect(PrismaClientMock).toHaveBeenCalledWith({ create: productSample, update: productSample, where: { lm: productSample.lm } })
+    expect(PrismaClientMock).toHaveBeenCalledWith({ data: productSample })
+  })
+  it('should throw if products already exists or if Prisma throws', async () => {
+    const inputSample = [productSample, productSample]
+
+    jest.spyOn(PrismaClientInstance.product, 'create')
+      .mockImplementation(PrismaClientMock)
+      .mockRejectedValue({ error: { code: 'P2002' } })
+
+    try {
+      await ProductsModel.bulkCreate(inputSample)
+    } catch (error) {
+      expect(error).toBeDefined()
+    }
+
+    expect(PrismaClientMock).toBeCalled()
+    expect.assertions(2)
   })
 
   it('should return products properly', async () => {
