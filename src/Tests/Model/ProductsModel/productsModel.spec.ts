@@ -12,7 +12,9 @@ describe('Products Model tests', () => {
   it('should add products properly', async () => {
     const inputSample = [productSample, productSample]
 
-    jest.spyOn(PrismaClientInstance.product, 'create').mockImplementation(PrismaClientMock)
+    jest
+      .spyOn(PrismaClientInstance.product, 'create')
+      .mockImplementation(PrismaClientMock)
 
     await ProductsModel.bulkCreate(inputSample)
 
@@ -22,7 +24,8 @@ describe('Products Model tests', () => {
   it('should throw if products already exists or if Prisma throws', async () => {
     const inputSample = [productSample, productSample]
 
-    jest.spyOn(PrismaClientInstance.product, 'create')
+    jest
+      .spyOn(PrismaClientInstance.product, 'create')
       .mockImplementation(PrismaClientMock)
       .mockRejectedValue({ error: { code: 'P2002' } })
 
@@ -62,11 +65,18 @@ describe('Products Model tests', () => {
 
   it('should throw when CSV contains invalid numeric values', async () => {
     const csvHeaderSample = Object.keys(fromCSVProductSample)
-    const inputSample = [csvHeaderSample, [{ ...fromCSVProductSample, price: "INVALID_PRICE" }], [fromCSVProductSample], [fromCSVProductSample]]
+    const inputSample = [
+      csvHeaderSample,
+      [{ ...fromCSVProductSample, price: 'INVALID_PRICE' }],
+      [fromCSVProductSample],
+      [fromCSVProductSample],
+    ]
 
     const mockedBulkCreationFunction = jest.fn()
 
-    jest.spyOn(ProductsModel, 'bulkCreate').mockImplementation(mockedBulkCreationFunction)
+    jest
+      .spyOn(ProductsModel, 'bulkCreate')
+      .mockImplementation(mockedBulkCreationFunction)
 
     try {
       await ProductsModel.createInBulkWithCSV(inputSample as string[][])

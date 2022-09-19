@@ -6,7 +6,10 @@ class Server {
   constructor(private app = express()) {
     const DEFAULT_LOCAL_PORT = 5000
 
-    this.app.listen(process.env.PORT || DEFAULT_LOCAL_PORT, () => new Router(app))
+    this.app.listen(
+      process.env.PORT || DEFAULT_LOCAL_PORT,
+      () => new Router(app),
+    )
   }
 }
 

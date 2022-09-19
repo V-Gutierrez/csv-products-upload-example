@@ -26,7 +26,9 @@ export default class ProductsRouter {
 
         res.status(200).json(products)
       } catch (error) {
-        res.status(500).json({ error: 'An error occurred while getting all products' })
+        res
+          .status(500)
+          .json({ error: 'An error occurred while getting all products' })
       }
     })
 
@@ -40,34 +42,55 @@ export default class ProductsRouter {
   uploadProducts() {
     const params = { route: '/resources/products', method: 'POST' }
 
-    this.app.post(params.route, Middlewares.singleFileUpload('products_csv'), async (req, res) => {
-      try {
-        const { file } = req
-        const { 1: fileExtension } = file?.originalname.split('.') as string[] ?? {}
+    this.app.post(
+      params.route,
+      Middlewares.singleFileUpload('products_csv'),
+      async (req, res) => {
+        try {
+          const { file } = req
+          const { 1: fileExtension } =
+            (file?.originalname.split('.') as string[]) ?? {}
 
+          if (!file?.filename)
+            res
+              .status(400)
+              .json({ error: 'Invalid request. Upload file is missing' })
+          else if (fileExtension !== 'csv')
+            res.status(400).json({ error: 'Invalid file type.' })
+          else {
+            const jobId = await ProccessingLogsModel.create()
 
-        if (!file?.filename) res.status(400).json({ error: 'Invalid request. Upload file is missing' })
-        else if (fileExtension !== 'csv') res.status(400).json({ error: 'Invalid file type.' })
-        else {
-          const jobId = await ProccessingLogsModel.create()
+            await Queuer.addToQueue(
+              CSVReader.readFile(file.path, async (_, data) => {
+                const isCSVValid = CSVReader.validateSchema(
+                  [
+                    'lm',
+                    'name',
+                    'free_shipping',
+                    'description',
+                    'price',
+                    'category',
+                  ],
+                  data[0],
+                )
+                if (isCSVValid) {
+                  await ProductsModel.createInBulkWithCSV(data)
+                  await ProccessingLogsModel.updateLog(true, jobId as string)
+                }
+              }),
+            )
 
-          await Queuer.addToQueue(
-            CSVReader.readFile(file.path, async (_, data) => {
-              const isCSVValid = CSVReader.validateSchema(['lm', 'name', 'free_shipping', 'description', 'price', 'category'], data[0])
-
-              if (isCSVValid) {
-                await ProductsModel.createInBulkWithCSV(data)
-                await ProccessingLogsModel.updateLog(true, jobId as string)
-              }
-            })
-          )
-
-          res.status(202).json({ message: 'File successfully uploaded', jobId })
+            res
+              .status(202)
+              .json({ message: 'File successfully uploaded', jobId })
+          }
+        } catch (error) {
+          res
+            .status(500)
+            .json({ error: 'An error occurred while uploading file' })
         }
-      } catch (error) {
-        res.status(500).json({ error: 'An error occurred while uploading file' })
-      }
-    })
+      },
+    )
 
     return params
   }

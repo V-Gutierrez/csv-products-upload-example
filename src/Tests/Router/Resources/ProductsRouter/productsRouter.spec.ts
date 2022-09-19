@@ -12,8 +12,10 @@ const RouterInstance = new Router(AppInstance)
 const ExpressInstance = RouterInstance.useExpressInstance()
 const TestedRouterInstance = new ProductsRouter(ExpressInstance)
 
-const { route: GET_ALL_ROUTE, method: GET_ALL_METHOD } = TestedRouterInstance.getAll()
-const { route: UPLOAD_FILE_ROUTE, method: UPLOAD_FILE_METHOD } = TestedRouterInstance.uploadProducts()
+const { route: GET_ALL_ROUTE, method: GET_ALL_METHOD } =
+  TestedRouterInstance.getAll()
+const { route: UPLOAD_FILE_ROUTE, method: UPLOAD_FILE_METHOD } =
+  TestedRouterInstance.uploadProducts()
 
 describe('Product Resource Routes', () => {
   test(`responds to  ${GET_ALL_METHOD} ${GET_ALL_ROUTE} with all available products`, async () => {
@@ -41,15 +43,16 @@ describe('Product Resource Routes', () => {
       .mockImplementation(ProcessingLogsModelMock)
       .mockResolvedValue(expectedJobId)
 
-    const response = await request(ExpressInstance).post(UPLOAD_FILE_ROUTE).attach('products_csv', fakeFile, {
-      filename: 'test.csv'
-    })
-
+    const response = await request(ExpressInstance)
+      .post(UPLOAD_FILE_ROUTE)
+      .attach('products_csv', fakeFile, {
+        filename: 'test.csv',
+      })
 
     expect(response.statusCode).toBe(202)
     expect(response.body).toEqual({
-      "message": "File successfully uploaded",
-      "jobId": expectedJobId
+      message: 'File successfully uploaded',
+      jobId: expectedJobId,
     })
   })
 
@@ -63,6 +66,8 @@ describe('Product Resource Routes', () => {
     const response = await request(ExpressInstance).post(UPLOAD_FILE_ROUTE)
 
     expect(response.statusCode).toBe(400)
-    expect(response.body).toEqual({ error: 'Invalid request. Upload file is missing' })
+    expect(response.body).toEqual({
+      error: 'Invalid request. Upload file is missing',
+    })
   })
 })

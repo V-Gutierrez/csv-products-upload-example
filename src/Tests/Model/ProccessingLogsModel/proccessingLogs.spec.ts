@@ -10,7 +10,11 @@ describe('ProcessingLogs Model tests', () => {
   })
 
   it('should create a log', async () => {
-    const mockedLog = { id: 'fake_cuid', ready: false, createdAt: new Date(Date.now()) }
+    const mockedLog = {
+      id: 'fake_cuid',
+      ready: false,
+      createdAt: new Date(Date.now()),
+    }
 
     jest
       .spyOn(PrismaClientInstance.proccessingLogs, 'create')
@@ -36,54 +40,58 @@ describe('ProcessingLogs Model tests', () => {
   it('should successfully update a log', async () => {
     const { ready, jobId } = processingLogsInput
 
-    jest.spyOn(PrismaClientInstance.proccessingLogs, 'update')
+    jest
+      .spyOn(PrismaClientInstance.proccessingLogs, 'update')
       .mockImplementation(PrismaClientMock)
 
     await ProccessingLogs.updateLog(ready, jobId)
 
     expect(PrismaClientMock).toHaveBeenCalledWith({
       data: { ready },
-      where: { id: jobId }
+      where: { id: jobId },
     })
-
-  });
+  })
 
   it('should return null if log update goes wrong', async () => {
     const { ready, jobId } = processingLogsInput
 
-
-    jest.spyOn(PrismaClientInstance.proccessingLogs, 'update')
+    jest
+      .spyOn(PrismaClientInstance.proccessingLogs, 'update')
       .mockImplementation(PrismaClientMock)
-      .mockRejectedValue(new Error("Mocked Error"))
+      .mockRejectedValue(new Error('Mocked Error'))
 
     const updateResponse = await ProccessingLogs.updateLog(ready, jobId)
 
     expect(PrismaClientMock).toHaveBeenCalledWith({
       data: { ready },
-      where: { id: jobId }
+      where: { id: jobId },
     })
     expect(updateResponse).toBe(null)
-
-  });
+  })
   it('should return null if search update goes wrong', async () => {
     const { jobId } = processingLogsInput
 
-
-    jest.spyOn(PrismaClientInstance.proccessingLogs, 'findFirst')
+    jest
+      .spyOn(PrismaClientInstance.proccessingLogs, 'findFirst')
       .mockImplementation(PrismaClientMock)
-      .mockRejectedValue(new Error("Mocked Error"))
+      .mockRejectedValue(new Error('Mocked Error'))
 
     const searchResponse = await ProccessingLogs.getLog(jobId)
 
     expect(PrismaClientMock).toHaveBeenCalled()
     expect(searchResponse).toBe(null)
-
-  });
+  })
   it('should return log in successful search', async () => {
     const { jobId } = processingLogsInput
-    const expectedOutput = { ...processingLogsInput, id: jobId, ready: true, createdAt: new Date(Date.now()) }
+    const expectedOutput = {
+      ...processingLogsInput,
+      id: jobId,
+      ready: true,
+      createdAt: new Date(Date.now()),
+    }
 
-    jest.spyOn(PrismaClientInstance.proccessingLogs, 'findFirst')
+    jest
+      .spyOn(PrismaClientInstance.proccessingLogs, 'findFirst')
       .mockImplementation(PrismaClientMock)
       .mockResolvedValue(expectedOutput)
 
@@ -91,6 +99,5 @@ describe('ProcessingLogs Model tests', () => {
 
     expect(PrismaClientMock).toHaveBeenCalled()
     expect(searchResponse).toBe(expectedOutput)
-
-  });
+  })
 })

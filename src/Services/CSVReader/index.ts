@@ -1,21 +1,21 @@
 import { CsvError, parse } from 'csv-parse'
 import fs from 'fs'
 
-
 class CSVReader {
-
   /**
    * It reads a file, parses it, and then calls a callback function with the parsed data
    * @param {string} filePath - The path to the file you want to read.
    * @param callback - (err: CsvError | undefined, data: any) => void
    */
   // eslint-disable-next-line no-unused-vars
-  readFile(filePath: string, callback: (err: CsvError | undefined, data: any) => void): null | void {
+  readFile(
+    filePath: string,
+    callback: (err: CsvError | undefined, data: any) => void,
+  ): null | void {
     const fileData = fs.readFileSync(filePath)
 
     if (fileData) parse(fileData, { delimiter: ';' }, callback)
   }
-
 
   /**
    * It checks if the column schema and the csv header are the same length, and if they are, it checks
@@ -38,4 +38,4 @@ class CSVReader {
   }
 }
 
-export default new CSVReader();
+export default new CSVReader()

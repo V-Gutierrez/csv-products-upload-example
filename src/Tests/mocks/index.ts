@@ -8,7 +8,6 @@ export const productSample = {
   price: 123.42,
 }
 
-
 export const fromCSVProductSample = {
   category: '0002',
   free_shipping: 1,
