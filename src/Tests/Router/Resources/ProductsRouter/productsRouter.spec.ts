@@ -34,18 +34,35 @@ describe('Product Resource Routes', () => {
   test(`responds to  ${UPLOAD_FILE_METHOD} ${UPLOAD_FILE_ROUTE} with jobId and success feedback`, async () => {
     const ProcessingLogsModelMock = jest.fn()
     const expectedJobId = 'JOB_ID'
+    const fakeFile = Buffer.alloc(1024 * 1024 * 10, '.')
 
     jest
       .spyOn(ProcessingLogsModel, 'create')
       .mockImplementation(ProcessingLogsModelMock)
       .mockResolvedValue(expectedJobId)
 
-    const response = await request(ExpressInstance).post(UPLOAD_FILE_ROUTE)
+    const response = await request(ExpressInstance).post(UPLOAD_FILE_ROUTE).attach('products_csv', fakeFile, {
+      filename: 'test.csv'
+    })
+
 
     expect(response.statusCode).toBe(202)
     expect(response.body).toEqual({
       "message": "File successfully uploaded",
       "jobId": expectedJobId
     })
+  })
+
+  test(`responds to  ${UPLOAD_FILE_METHOD} ${UPLOAD_FILE_ROUTE} with error if no file is provided`, async () => {
+    const ProcessingLogsModelMock = jest.fn()
+
+    jest
+      .spyOn(ProcessingLogsModel, 'create')
+      .mockImplementation(ProcessingLogsModelMock)
+
+    const response = await request(ExpressInstance).post(UPLOAD_FILE_ROUTE)
+
+    expect(response.statusCode).toBe(400)
+    expect(response.body).toEqual({ error: 'Invalid request. Upload file is missing' })
   })
 })

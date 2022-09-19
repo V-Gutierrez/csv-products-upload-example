@@ -20,7 +20,7 @@ describe('ProcessingLogs Model tests', () => {
 
     expect(id).toBe(mockedLog.id)
   })
-  it('should create null in error case', async () => {
+  it('should return null in error case', async () => {
     jest
       .spyOn(PrismaClientInstance.proccessingLogs, 'create')
       .mockImplementation(PrismaClientMock)

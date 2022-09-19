@@ -8,8 +8,6 @@ class ProccessingLogsModel {
 
       return log.id
     } catch (error) {
-      console.error(error)
-      // TODO: improve error logging
       return null
     }
   }
