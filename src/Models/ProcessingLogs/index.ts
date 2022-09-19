@@ -21,6 +21,18 @@ class ProccessingLogsModel {
       return null
     }
   }
+
+  async getLog(jobId: string) {
+    try {
+      const jobLog = await PrismaClientInstance.proccessingLogs.findFirst(
+        { where: { id: jobId } }
+      )
+
+      return jobLog
+    } catch (error) {
+      return null
+    }
+  }
 }
 
 export default new ProccessingLogsModel()

@@ -65,4 +65,32 @@ describe('ProcessingLogs Model tests', () => {
     expect(updateResponse).toBe(null)
 
   });
+  it('should return null if search update goes wrong', async () => {
+    const { jobId } = processingLogsInput
+
+
+    jest.spyOn(PrismaClientInstance.proccessingLogs, 'findFirst')
+      .mockImplementation(PrismaClientMock)
+      .mockRejectedValue(new Error("Mocked Error"))
+
+    const searchResponse = await ProccessingLogs.getLog(jobId)
+
+    expect(PrismaClientMock).toHaveBeenCalled()
+    expect(searchResponse).toBe(null)
+
+  });
+  it('should return log in successful search', async () => {
+    const { jobId } = processingLogsInput
+    const expectedOutput = { ...processingLogsInput, id: jobId, ready: true, createdAt: new Date(Date.now()) }
+
+    jest.spyOn(PrismaClientInstance.proccessingLogs, 'findFirst')
+      .mockImplementation(PrismaClientMock)
+      .mockResolvedValue(expectedOutput)
+
+    const searchResponse = await ProccessingLogs.getLog(jobId)
+
+    expect(PrismaClientMock).toHaveBeenCalled()
+    expect(searchResponse).toBe(expectedOutput)
+
+  });
 })
