@@ -3,9 +3,8 @@ import ProductsModel from '@Models/Products'
 import ProccessingLogsModel from '@Models/ProcessingLogs/index'
 import { Express } from 'express'
 import CSVReader from '@Services/CSVReader'
-import PQueue from 'p-queue';
+import Queuer from '@Services/Queuer'
 
-const queue = new PQueue({ concurrency: 1 });
 /* It's a router for the products resource */
 export default class ProductsRouter {
   constructor(private readonly app: Express) {
@@ -50,19 +49,20 @@ export default class ProductsRouter {
         if (!file?.filename) res.status(400).json({ error: 'Invalid request. Upload file is missing' })
         else if (fileExtension !== 'csv') res.status(400).json({ error: 'Invalid file type.' })
         else {
-          const log = await ProccessingLogsModel.create()
+          const jobId = await ProccessingLogsModel.create()
 
-          queue.add(() => {
+          await Queuer.addToQueue(
             CSVReader.readFile(file.path, async (_, data) => {
-              const isCSVValid = CSVReader.validateSchema(data[0], data[0])
+              const isCSVValid = CSVReader.validateSchema(['lm', 'name', 'free_shipping', 'description', 'price', 'category'], data[0])
+
               if (isCSVValid) {
                 await ProductsModel.createInBulkWithCSV(data)
-                // Update Log
+                await ProccessingLogsModel.updateLog(true, jobId as string)
               }
             })
-          })
+          )
 
-          res.status(202).json({ message: 'File successfully uploaded', jobId: log })
+          res.status(202).json({ message: 'File successfully uploaded', jobId })
         }
       } catch (error) {
         res.status(500).json({ error: 'An error occurred while uploading file' })

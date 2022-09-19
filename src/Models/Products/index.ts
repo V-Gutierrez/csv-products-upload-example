@@ -11,10 +11,6 @@ class ProductsModel {
         })
       ))
     } catch (error) {
-      const { code } = error as any
-      // If Products already exists do not halt application
-      if (code === 'P2002') return
-      
       throw new Error('bulkCreate error')
     }
   }
