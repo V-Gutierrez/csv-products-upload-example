@@ -1,6 +1,7 @@
 import express, { Express } from 'express'
 import morgan from 'morgan'
 import multer from 'multer'
+import os from 'os'
 
 export default class Middlewares {
   constructor(private readonly app: Express) {
@@ -18,6 +19,6 @@ export default class Middlewares {
    * will handle a single file upload.
    */
   static singleFileUpload(formDataKey: string) {
-    return multer().single(formDataKey)
+    return multer({ dest: os.tmpdir() }).single(formDataKey)
   }
 }
