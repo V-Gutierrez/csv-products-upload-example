@@ -10,7 +10,7 @@ export const productSample = {
 
 
 export const fromCSVProductSample = {
-  category: '0001',
+  category: '0002',
   free_shipping: 1,
   lm: '0001',
   description: 'This is my test product',
