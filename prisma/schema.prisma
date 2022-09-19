@@ -11,12 +11,12 @@ datasource db {
 }
 
 model Product {
-  lm            Int     @unique
+  lm            String  @unique
   name          String
   free_shipping Boolean
   description   String
   price         Float
-  category      Int
+  category      String
 }
 
 model ProccessingLogs {
