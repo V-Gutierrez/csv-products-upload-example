@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Prisma } from '@prisma/client'
 import PrismaClientInstance from '@Clients/Prisma/index'
 
@@ -5,15 +6,22 @@ class ProductsModel {
   async bulkCreate(products: Prisma.ProductCreateInput[]) {
     try {
       const bulkCreation = products.map(async (item) =>
-        PrismaClientInstance.product.create({
-          data: item,
-        }),
+        PrismaClientInstance.product.upsert({
+          create: {
+            ...item
+          },
+          update: {
+            ...item
+          },
+          where: {
+            lm: item.lm
+          },
+        })
       )
 
       await Promise.all(bulkCreation)
     } catch (error) {
-      console.error(error)
-      // TODO: improve error logging
+      throw new Error('bulkCreate error')
     }
   }
 
@@ -23,9 +31,34 @@ class ProductsModel {
 
       return allProducts
     } catch (error) {
-      console.error(error)
-      // TODO: improve error logging
       return []
+    }
+  }
+
+  async createInBulkWithCSV(parsedCSV: string[][]) {
+    try {
+      // Ignore headers by slicing from index 1
+      const parsedData = (parsedCSV.slice(1)).map((item) => {
+        const { 0: lm, 1: name, 2: free_shipping, 3: description, 4: price, 5: category } = item
+
+        if (Number.isNaN(Number(price))) {
+          throw new Error('Invalid numeric value for price, please provide a valid one.')
+        }
+
+        return {
+          lm,
+          name,
+          free_shipping: free_shipping !== '0',
+          description,
+          price: Number(price),
+          category
+        }
+      })
+
+      await this.bulkCreate(parsedData as unknown as Prisma.ProductCreateInput[])
+
+    } catch (error) {
+      throw new Error('createInBulkWithCSV error')
     }
   }
 }
