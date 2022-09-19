@@ -1,6 +1,6 @@
 import PrismaClientInstance from '@Clients/Prisma/'
 import ProductsModel from '@Models/Products'
-import { productSample, fromCSVProductSample } from '@Tests/mocks'
+import { productSample, fromCSVProductSample } from '@Tests/Mocks'
 
 describe('Products Model tests', () => {
   const PrismaClientMock = jest.fn()
@@ -63,6 +63,7 @@ describe('Products Model tests', () => {
   it('should throw when CSV contains invalid numeric values', async () => {
     const csvHeaderSample = Object.keys(fromCSVProductSample)
     const inputSample = [csvHeaderSample, [{ ...fromCSVProductSample, price: "INVALID_PRICE" }], [fromCSVProductSample], [fromCSVProductSample]]
+
     const mockedBulkCreationFunction = jest.fn()
 
     jest.spyOn(ProductsModel, 'bulkCreate').mockImplementation(mockedBulkCreationFunction)

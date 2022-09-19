@@ -4,7 +4,7 @@ import Router from '@Router/index'
 import request from 'supertest'
 import express from 'express'
 import ProductsRouter from '@Router/Resources/ProductsRouter'
-import { productSample } from '@Tests/mocks'
+import { productSample } from '@Tests/Mocks'
 
 const AppInstance = express()
 const RouterInstance = new Router(AppInstance)

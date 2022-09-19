@@ -1,5 +1,6 @@
 import ProccessingLogs from '@Models/ProcessingLogs'
 import PrismaClientInstance from '@Clients/Prisma/'
+import { processingLogsInput } from '@Tests/Mocks'
 
 describe('ProcessingLogs Model tests', () => {
   const PrismaClientMock = jest.fn()
@@ -20,6 +21,7 @@ describe('ProcessingLogs Model tests', () => {
 
     expect(id).toBe(mockedLog.id)
   })
+
   it('should return null in error case', async () => {
     jest
       .spyOn(PrismaClientInstance.proccessingLogs, 'create')
@@ -30,4 +32,37 @@ describe('ProcessingLogs Model tests', () => {
 
     expect(id).toBe(null)
   })
+
+  it('should successfully update a log', async () => {
+    const { ready, jobId } = processingLogsInput
+
+    jest.spyOn(PrismaClientInstance.proccessingLogs, 'update')
+      .mockImplementation(PrismaClientMock)
+
+    await ProccessingLogs.updateLog(ready, jobId)
+
+    expect(PrismaClientMock).toHaveBeenCalledWith({
+      data: { ready },
+      where: { id: jobId }
+    })
+
+  });
+
+  it('should return null if log update goes wrong', async () => {
+    const { ready, jobId } = processingLogsInput
+
+
+    jest.spyOn(PrismaClientInstance.proccessingLogs, 'update')
+      .mockImplementation(PrismaClientMock)
+      .mockRejectedValue(new Error("Mocked Error"))
+
+    const updateResponse = await ProccessingLogs.updateLog(ready, jobId)
+
+    expect(PrismaClientMock).toHaveBeenCalledWith({
+      data: { ready },
+      where: { id: jobId }
+    })
+    expect(updateResponse).toBe(null)
+
+  });
 })

@@ -17,3 +17,5 @@ export const fromCSVProductSample = {
   name: 'Furadeira Lavadeira',
   price: 123.42,
 }
+
+export const processingLogsInput = { ready: true, jobId: 'FAKE_JOB_ID' }

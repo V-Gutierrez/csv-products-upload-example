@@ -53,9 +53,12 @@ export default class ProductsRouter {
           const log = await ProccessingLogsModel.create()
 
           queue.add(() => {
-            CSVReader.readFile(file.path, (_, data) => {
+            CSVReader.readFile(file.path, async (_, data) => {
               const isCSVValid = CSVReader.validateSchema(data[0], data[0])
-              if (isCSVValid) ProductsModel.createInBulkWithCSV(data)
+              if (isCSVValid) {
+                await ProductsModel.createInBulkWithCSV(data)
+                // Update Log
+              }
             })
           })
 

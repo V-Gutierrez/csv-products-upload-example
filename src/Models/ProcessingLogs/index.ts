@@ -11,6 +11,16 @@ class ProccessingLogsModel {
       return null
     }
   }
+
+  async updateLog(ready: boolean, jobId: string) {
+    try {
+      const jobLog = await PrismaClientInstance.proccessingLogs.update({ data: { ready }, where: { id: jobId } })
+
+      return jobLog
+    } catch (error) {
+      return null
+    }
+  }
 }
 
 export default new ProccessingLogsModel()
