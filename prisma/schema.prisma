@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -22,6 +22,5 @@ model Product {
 model ProccessingLogs {
   id        String   @unique @default(cuid())
   ready     Boolean  @default(false)
-  failed    Boolean  @default(false)
   createdAt DateTime @default(now())
 }
