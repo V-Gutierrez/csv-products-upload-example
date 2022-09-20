@@ -10,9 +10,9 @@
     "prisma:studio": "npx prisma studio",
     "prisma:migrate": "npx prisma migrate dev",
     "prepare": "husky install",
-    "start": "pm2-runtime start ecosystem.config.js --env production",
-    "update:db": "npm run prisma:migrate:deploy && npm run prisma:generate",
-    "build:webpack": "webpack --config webpack.config.js"
+    "start": "npm run build && npm run update:db && pm2-runtime start ecosystem.config.js --env production",
+    "update:db": "npx prisma migrate deploy && npm run prisma:generate",
+    "build": "webpack --config webpack.config.js"
   },
   "author": "Victor Gutierrez",
   "license": "ISC",
@@ -43,6 +43,7 @@
     "prettier": "^2.7.1",
     "prisma": "^4.3.1",
     "ts-jest": "^29.0.1",
+    "ts-loader": "^9.4.0",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.7.0",
     "tsconfig-paths": "^4.1.0",
