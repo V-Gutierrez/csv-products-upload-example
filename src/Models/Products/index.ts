@@ -30,7 +30,7 @@ class ProductsModel {
   async createInBulkWithCSV(parsedCSV: string[][]) {
     try {
       // Ignore headers by slicing from index 1
-      const parsedData = parsedCSV.slice(1).map((item, _) => {
+      const parsedData = parsedCSV.slice(1).map((item) => {
         const {
           0: lm,
           1: name,
@@ -41,7 +41,6 @@ class ProductsModel {
         } = item
 
         if (Number.isNaN(Number(price))) {
-          console.log(_)
           throw new Error(
             'Invalid numeric value for price, please provide a valid one.',
           )
