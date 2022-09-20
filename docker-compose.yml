@@ -1,7 +1,7 @@
 services:
   node:
     build: "."
-    command: npm run start:dev
+    command: npm run start
     ports:
       - "5002:5000"
     volumes:
