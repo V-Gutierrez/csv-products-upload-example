@@ -5,13 +5,9 @@ import PrismaClientInstance from '@Clients/Prisma/index'
 class ProductsModel {
   async bulkCreate(products: Prisma.ProductCreateInput[]) {
     try {
-      await Promise.all(
-        products.map(async (item) =>
-          PrismaClientInstance.product.create({
-            data: item,
-          }),
-        ),
-      )
+      await PrismaClientInstance.product.createMany({
+        data: products,
+      })
     } catch (error) {
       throw new Error('bulkCreate error')
     }

@@ -13,15 +13,15 @@ describe('Products Model tests', () => {
     const inputSample = [productSample, productSample]
 
     jest
-      .spyOn(PrismaClientInstance.product, 'create')
+      .spyOn(PrismaClientInstance.product, 'createMany')
       .mockImplementation(PrismaClientMock)
 
     await ProductsModel.bulkCreate(inputSample)
 
-    expect(PrismaClientMock).toBeCalledTimes(inputSample.length)
-    expect(PrismaClientMock).toHaveBeenCalledWith({ data: productSample })
+    expect(PrismaClientMock).toBeCalled()
+    expect(PrismaClientMock).toHaveBeenCalledWith({ data: inputSample })
   })
-  it('should throw if products already exists or if Prisma throws', async () => {
+  it('should not throw if products already exists or if Prisma throws', async () => {
     const inputSample = [productSample, productSample]
 
     jest
@@ -32,11 +32,12 @@ describe('Products Model tests', () => {
     try {
       await ProductsModel.bulkCreate(inputSample)
     } catch (error) {
+      // should not be called
       expect(error).toBeDefined()
     }
 
     expect(PrismaClientMock).toBeCalled()
-    expect.assertions(2)
+    expect.assertions(1)
   })
 
   it('should return products properly', async () => {
