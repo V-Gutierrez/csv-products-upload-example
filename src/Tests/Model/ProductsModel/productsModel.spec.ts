@@ -1,4 +1,4 @@
-import PrismaClientInstance from '@Clients/Prisma/'
+import { Products } from '@Clients/Prisma/'
 import ProductsModel from '@Models/Products'
 import { productSample, fromCSVProductSample } from '@Tests/Mocks'
 
@@ -12,9 +12,7 @@ describe('Products Model tests', () => {
   it('should add products properly', async () => {
     const inputSample = [productSample, productSample]
 
-    jest
-      .spyOn(PrismaClientInstance.products, 'createMany')
-      .mockImplementation(PrismaClientMock)
+    jest.spyOn(Products, 'createMany').mockImplementation(PrismaClientMock)
 
     await ProductsModel.bulkCreate(inputSample)
 
@@ -25,7 +23,7 @@ describe('Products Model tests', () => {
     const inputSample = [productSample, productSample]
 
     jest
-      .spyOn(PrismaClientInstance.products, 'create')
+      .spyOn(Products, 'create')
       .mockImplementation(PrismaClientMock)
       .mockRejectedValue({ error: { code: 'P2002' } })
 
@@ -44,7 +42,7 @@ describe('Products Model tests', () => {
     const responseSample = [productSample, productSample, productSample]
 
     jest
-      .spyOn(PrismaClientInstance.products, 'findMany')
+      .spyOn(Products, 'findMany')
       .mockImplementation(PrismaClientMock)
       .mockResolvedValue(responseSample)
 
@@ -55,7 +53,7 @@ describe('Products Model tests', () => {
 
   it('should return empty array if anything goes wrong', async () => {
     jest
-      .spyOn(PrismaClientInstance.products, 'findMany')
+      .spyOn(Products, 'findMany')
       .mockImplementation(PrismaClientMock)
       .mockRejectedValue(null)
 
@@ -92,9 +90,7 @@ describe('Products Model tests', () => {
   it('should delete a product successfully', async () => {
     const id = 'FAKE_PRODUCT_ID'
 
-    jest
-      .spyOn(PrismaClientInstance.products, 'delete')
-      .mockImplementation(PrismaClientMock)
+    jest.spyOn(Products, 'delete').mockImplementation(PrismaClientMock)
 
     await ProductsModel.delete(id)
 
@@ -104,7 +100,7 @@ describe('Products Model tests', () => {
     const id = 'FAKE_PRODUCT_ID'
 
     jest
-      .spyOn(PrismaClientInstance.products, 'delete')
+      .spyOn(Products, 'delete')
       .mockImplementation(PrismaClientMock)
       .mockRejectedValue(() => {
         throw new Error('Failed to delete')

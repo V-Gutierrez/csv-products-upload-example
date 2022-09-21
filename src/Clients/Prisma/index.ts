@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 
-const PrismaClientInstance = new PrismaClient()
+const { processingLogs, products } = new PrismaClient()
 
-export default PrismaClientInstance
+export const ProcessingLogs = processingLogs
+export const Products = products

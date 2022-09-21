@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { Prisma } from '@prisma/client'
-import PrismaClientInstance from '@Clients/Prisma/index'
+import { Products } from '@Clients/Prisma/index'
 
 class ProductsModel {
   /**
@@ -9,7 +9,7 @@ class ProductsModel {
    */
   async bulkCreate(products: Prisma.ProductsCreateInput[]) {
     try {
-      await PrismaClientInstance.products.createMany({
+      await Products.createMany({
         data: products,
       })
     } catch (error) {
@@ -23,7 +23,7 @@ class ProductsModel {
    */
   async getAll() {
     try {
-      const allProducts = await PrismaClientInstance.products.findMany()
+      const allProducts = await Products.findMany()
 
       return allProducts
     } catch (error) {
@@ -74,7 +74,7 @@ class ProductsModel {
 
   async delete(productId: string) {
     try {
-      await PrismaClientInstance.products.delete({
+      await Products.delete({
         where: { lm: productId },
       })
     } catch (error) {
