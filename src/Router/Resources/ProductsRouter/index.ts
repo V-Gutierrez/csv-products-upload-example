@@ -1,6 +1,6 @@
 import Middlewares from '@Middlewares/index'
 import ProductsModel from '@Models/Products'
-import ProccessingLogsModel from '@Models/ProcessingLogs/index'
+import ProcessingLogsModel from '@Models/ProcessingLogs/index'
 import { Express } from 'express'
 import CSVReader from '@Services/CSVReader'
 import Queuer from '@Services/Queuer'
@@ -58,7 +58,7 @@ export default class ProductsRouter {
           else if (fileExtension !== 'csv')
             res.status(400).json({ error: 'Invalid file type.' })
           else {
-            const jobId = await ProccessingLogsModel.create()
+            const jobId = await ProcessingLogsModel.create()
 
             await Queuer.addToQueue(
               CSVReader.readFile(file.path, async (_, data) => {
@@ -78,9 +78,9 @@ export default class ProductsRouter {
                   if (!isCSVValid) throw new Error('Invalid CSV file format')
 
                   await ProductsModel.createInBulkWithCSV(data)
-                  await ProccessingLogsModel.updateLog(true, jobId as string)
+                  await ProcessingLogsModel.updateLog(true, jobId as string)
                 } catch (error) {
-                  await ProccessingLogsModel.markAsFailed(jobId as string)
+                  await ProcessingLogsModel.markAsFailed(jobId as string)
                 }
               }),
             )

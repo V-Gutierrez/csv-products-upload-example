@@ -25,7 +25,7 @@ describe('Status Router', () => {
 
   it(`responds ${GET_JOB_STATUS_METHOD} ${GET_JOB_STATUS_ROUTE} a job when a job id is provided`, async () => {
     jest
-      .spyOn(PrismaClientInstance.proccessingLogs, 'findFirst')
+      .spyOn(PrismaClientInstance.processingLogs, 'findFirst')
       .mockImplementation(PrismaClientMock)
       .mockResolvedValue({
         id: jobId,
@@ -40,7 +40,7 @@ describe('Status Router', () => {
   })
   it(`responds ${GET_JOB_STATUS_METHOD} ${GET_JOB_STATUS_ROUTE} 404 when a job id is provided but there is not any matching log`, async () => {
     jest
-      .spyOn(PrismaClientInstance.proccessingLogs, 'findFirst')
+      .spyOn(PrismaClientInstance.processingLogs, 'findFirst')
       .mockImplementation(PrismaClientMock)
       .mockRejectedValue(null)
 

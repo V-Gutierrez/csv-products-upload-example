@@ -1,4 +1,4 @@
-import ProccessingLogsModel from '@Models/ProcessingLogs/index'
+import ProcessingLogsModel from '@Models/ProcessingLogs/index'
 import { Express } from 'express'
 
 export default class StatusRouter {
@@ -18,7 +18,7 @@ export default class StatusRouter {
       try {
         const { jobId } = req.params
 
-        const jobStatus = await ProccessingLogsModel.getLog(jobId)
+        const jobStatus = await ProcessingLogsModel.getLog(jobId)
 
         if (!jobStatus) res.status(404).json({ error: 'Job not found' })
         else res.status(200).json(jobStatus)

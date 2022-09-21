@@ -19,7 +19,7 @@ model Product {
   category      String
 }
 
-model ProccessingLogs {
+model ProcessingLogs {
   id        String   @unique @default(cuid())
   ready     Boolean  @default(false)
   failure   Boolean  @default(false)

@@ -1,10 +1,10 @@
 import { Prisma } from '@prisma/client'
 import PrismaClientInstance from '@Clients/Prisma/index'
 
-class ProccessingLogsModel {
-  async create(newLog?: Prisma.ProccessingLogsCreateInput) {
+class ProcessingLogsModel {
+  async create(newLog?: Prisma.ProcessingLogsCreateInput) {
     try {
-      const log = await PrismaClientInstance.proccessingLogs.create({
+      const log = await PrismaClientInstance.processingLogs.create({
         data: newLog || {},
       })
 
@@ -16,7 +16,7 @@ class ProccessingLogsModel {
 
   async updateLog(ready: boolean, jobId: string) {
     try {
-      const jobLog = await PrismaClientInstance.proccessingLogs.update({
+      const jobLog = await PrismaClientInstance.processingLogs.update({
         data: { ready },
         where: { id: jobId },
       })
@@ -29,7 +29,7 @@ class ProccessingLogsModel {
 
   async getLog(jobId: string) {
     try {
-      const jobLog = await PrismaClientInstance.proccessingLogs.findFirst({
+      const jobLog = await PrismaClientInstance.processingLogs.findFirst({
         where: { id: jobId },
       })
 
@@ -41,7 +41,7 @@ class ProccessingLogsModel {
 
   async markAsFailed(jobId: string) {
     try {
-      await PrismaClientInstance.proccessingLogs.update({
+      await PrismaClientInstance.processingLogs.update({
         where: { id: jobId },
         data: { failure: true },
       })
@@ -51,4 +51,4 @@ class ProccessingLogsModel {
   }
 }
 
-export default new ProccessingLogsModel()
+export default new ProcessingLogsModel()

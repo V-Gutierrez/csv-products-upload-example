@@ -1,4 +1,4 @@
-import ProccessingLogs from '@Models/ProcessingLogs'
+import processingLogs from '@Models/ProcessingLogs'
 import PrismaClientInstance from '@Clients/Prisma/'
 import { processingLogsInput } from '@Tests/Mocks'
 
@@ -18,22 +18,22 @@ describe('ProcessingLogs Model tests', () => {
     }
 
     jest
-      .spyOn(PrismaClientInstance.proccessingLogs, 'create')
+      .spyOn(PrismaClientInstance.processingLogs, 'create')
       .mockImplementation(PrismaClientMock)
       .mockResolvedValue(mockedLog)
 
-    const id = await ProccessingLogs.create()
+    const id = await processingLogs.create()
 
     expect(id).toBe(mockedLog.id)
   })
 
   it('should return null in error case', async () => {
     jest
-      .spyOn(PrismaClientInstance.proccessingLogs, 'create')
+      .spyOn(PrismaClientInstance.processingLogs, 'create')
       .mockImplementation(PrismaClientMock)
       .mockRejectedValue(null)
 
-    const id = await ProccessingLogs.create()
+    const id = await processingLogs.create()
 
     expect(id).toBe(null)
   })
@@ -42,10 +42,10 @@ describe('ProcessingLogs Model tests', () => {
     const { ready, jobId } = processingLogsInput
 
     jest
-      .spyOn(PrismaClientInstance.proccessingLogs, 'update')
+      .spyOn(PrismaClientInstance.processingLogs, 'update')
       .mockImplementation(PrismaClientMock)
 
-    await ProccessingLogs.updateLog(ready, jobId)
+    await processingLogs.updateLog(ready, jobId)
 
     expect(PrismaClientMock).toHaveBeenCalledWith({
       data: { ready },
@@ -57,11 +57,11 @@ describe('ProcessingLogs Model tests', () => {
     const { ready, jobId } = processingLogsInput
 
     jest
-      .spyOn(PrismaClientInstance.proccessingLogs, 'update')
+      .spyOn(PrismaClientInstance.processingLogs, 'update')
       .mockImplementation(PrismaClientMock)
       .mockRejectedValue(new Error('Mocked Error'))
 
-    const updateResponse = await ProccessingLogs.updateLog(ready, jobId)
+    const updateResponse = await processingLogs.updateLog(ready, jobId)
 
     expect(PrismaClientMock).toHaveBeenCalledWith({
       data: { ready },
@@ -73,11 +73,11 @@ describe('ProcessingLogs Model tests', () => {
     const { jobId } = processingLogsInput
 
     jest
-      .spyOn(PrismaClientInstance.proccessingLogs, 'findFirst')
+      .spyOn(PrismaClientInstance.processingLogs, 'findFirst')
       .mockImplementation(PrismaClientMock)
       .mockRejectedValue(new Error('Mocked Error'))
 
-    const searchResponse = await ProccessingLogs.getLog(jobId)
+    const searchResponse = await processingLogs.getLog(jobId)
 
     expect(PrismaClientMock).toHaveBeenCalled()
     expect(searchResponse).toBe(null)
@@ -92,11 +92,11 @@ describe('ProcessingLogs Model tests', () => {
     }
 
     jest
-      .spyOn(PrismaClientInstance.proccessingLogs, 'findFirst')
+      .spyOn(PrismaClientInstance.processingLogs, 'findFirst')
       .mockImplementation(PrismaClientMock)
       .mockResolvedValue(expectedOutput)
 
-    const searchResponse = await ProccessingLogs.getLog(jobId)
+    const searchResponse = await processingLogs.getLog(jobId)
 
     expect(PrismaClientMock).toHaveBeenCalled()
     expect(searchResponse).toBe(expectedOutput)
@@ -105,10 +105,10 @@ describe('ProcessingLogs Model tests', () => {
     const { jobId } = processingLogsInput
 
     jest
-      .spyOn(PrismaClientInstance.proccessingLogs, 'update')
+      .spyOn(PrismaClientInstance.processingLogs, 'update')
       .mockImplementation(PrismaClientMock)
 
-    await ProccessingLogs.markAsFailed(jobId)
+    await processingLogs.markAsFailed(jobId)
 
     expect(PrismaClientMock).toHaveBeenCalled()
     expect(PrismaClientMock).toHaveBeenCalledWith({
@@ -120,7 +120,7 @@ describe('ProcessingLogs Model tests', () => {
     const { jobId } = processingLogsInput
 
     jest
-      .spyOn(PrismaClientInstance.proccessingLogs, 'update')
+      .spyOn(PrismaClientInstance.processingLogs, 'update')
       .mockImplementation(
         PrismaClientMock.mockImplementation(() => {
           throw new Error(`Job ${jobId}`)
@@ -128,7 +128,7 @@ describe('ProcessingLogs Model tests', () => {
       )
 
     try {
-      await ProccessingLogs.markAsFailed(jobId)
+      await processingLogs.markAsFailed(jobId)
     } catch (error) {
       expect(error).toBeDefined()
       expect(PrismaClientMock).toThrow()
