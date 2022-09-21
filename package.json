@@ -4,7 +4,7 @@
   "description": "Backend test for Leroy Merlin Brasil",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest --watchAll --coverage --silent",
+    "test": "jest --watchAll --coverage ",
     "start:dev": "nodemon src/index.ts",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
