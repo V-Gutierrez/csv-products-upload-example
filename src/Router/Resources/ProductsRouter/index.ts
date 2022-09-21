@@ -62,8 +62,10 @@ export default class ProductsRouter {
 
             /* It's sending the file to a queue for processing. */
             await Queuer.addToQueue(
-              CSVReader.readFile(file.path, async (_, data) => {
+              CSVReader.readFile(file.path, async (err, data) => {
                 try {
+                  if (err) throw new Error('Failure reading CSV file')
+
                   const isCSVValid = CSVReader.validateSchema(
                     [
                       'lm',
