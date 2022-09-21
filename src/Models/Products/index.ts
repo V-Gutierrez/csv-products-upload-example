@@ -31,19 +31,10 @@ class ProductsModel {
     try {
       // Ignore headers by slicing from index 1
       const parsedData = parsedCSV.slice(1).map((item) => {
-        const {
-          0: lm,
-          1: name,
-          2: free_shipping,
-          3: description,
-          4: price,
-          5: category,
-        } = item
+        const { 0: lm, 1: name, 2: free_shipping, 3: description, 4: price, 5: category } = item
 
         if (Number.isNaN(Number(price))) {
-          throw new Error(
-            'Invalid numeric value for price, please provide a valid one.',
-          )
+          throw new Error('Invalid numeric value for price, please provide a valid one.')
         }
 
         return {
@@ -56,14 +47,8 @@ class ProductsModel {
         }
       })
 
-      await this.bulkCreate(
-        parsedData as unknown as Prisma.ProductCreateInput[],
-      )
+      await this.bulkCreate(parsedData as unknown as Prisma.ProductCreateInput[])
     } catch (error) {
-      console.log(
-        '🚀 ~ file: index.ts ~ line 51 ~ ProductsModel ~ createInBulkWithCSV ~ error',
-        error,
-      )
       throw new Error('createInBulkWithCSV error')
     }
   }
