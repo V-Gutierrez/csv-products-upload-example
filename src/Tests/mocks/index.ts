@@ -17,4 +17,4 @@ export const fromCSVProductSample = {
   price: 123.42,
 }
 
-export const processingLogsInput = { ready: true, jobId: 'FAKE_JOB_ID' }
+export const processingLogsInput = { ready: true, jobId: 'FAKE_JOB_ID', failure: false }
