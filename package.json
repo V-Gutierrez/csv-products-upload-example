@@ -4,12 +4,12 @@
   "description": "Backend test for Leroy Merlin Brasil",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest --watchAll --coverage ",
+    "test": "jest --watchAll --coverage --silent",
     "start:dev": "nodemon src/index.ts",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
     "prisma:migrate": "npx prisma migrate dev",
-    "prepare": "husky install",
+    "prepare": "npx husky install",
     "start": "npm run build && npm run update:db && pm2-runtime start ecosystem.config.js --env production",
     "update:db": "npx prisma migrate deploy && npm run prisma:generate",
     "build": "webpack --config webpack.config.js"
@@ -66,7 +66,8 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",
-      "eslint --fix"
+      "eslint --fix",
+      "jest --silent"
     ]
   },
   "nodemonConfig": {
