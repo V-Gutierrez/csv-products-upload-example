@@ -60,6 +60,7 @@ export default class ProductsRouter {
           else {
             const jobId = await ProcessingLogsModel.create()
 
+            /* It's sending the file to a queue for processing. */
             await Queuer.addToQueue(
               CSVReader.readFile(file.path, async (_, data) => {
                 try {

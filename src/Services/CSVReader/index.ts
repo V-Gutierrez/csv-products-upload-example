@@ -7,9 +7,9 @@ class CSVReader {
    * @param {string} filePath - The path to the file you want to read.
    * @param callback - (err: CsvError | undefined, data: any) => void
    */
-  // eslint-disable-next-line no-unused-vars
   readFile(
     filePath: string,
+    // eslint-disable-next-line no-unused-vars
     callback: (err: CsvError | undefined, data: any) => void,
   ): null | void {
     const fileData = fs.readFileSync(filePath)

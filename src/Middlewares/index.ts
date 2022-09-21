@@ -6,8 +6,12 @@ import os from 'os'
 export default class Middlewares {
   constructor(private readonly app: Express) {
     this.app = app
+    /* Setting up the middlewares for the express app. */
+
+    /* A middleware that parses the body of the request and makes it available in the request object. */
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: false }))
+    /* A middleware that logs the request and response of the server. */
     this.app.use(morgan('combined'))
   }
 

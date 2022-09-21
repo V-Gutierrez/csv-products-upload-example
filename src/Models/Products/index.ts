@@ -3,6 +3,10 @@ import { Prisma } from '@prisma/client'
 import PrismaClientInstance from '@Clients/Prisma/index'
 
 class ProductsModel {
+  /**
+   * It takes an array of products, and creates them in the database
+   * @param {Prisma.ProductCreateInput[]} products - Prisma.ProductCreateInput[]
+   */
   async bulkCreate(products: Prisma.ProductCreateInput[]) {
     try {
       await PrismaClientInstance.product.createMany({
@@ -13,6 +17,10 @@ class ProductsModel {
     }
   }
 
+  /**
+   * It returns all products from the database
+   * @returns An array of all products
+   */
   async getAll() {
     try {
       const allProducts = await PrismaClientInstance.product.findMany()
@@ -23,6 +31,10 @@ class ProductsModel {
     }
   }
 
+  /**
+   * It takes a parsed CSV contents and creates a new product for each row
+   * @param {string[][]} parsedCSV - string[][]
+   */
   async createInBulkWithCSV(parsedCSV: string[][]) {
     try {
       // Ignore headers by slicing from index 1

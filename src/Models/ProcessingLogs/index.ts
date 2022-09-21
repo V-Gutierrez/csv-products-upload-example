@@ -2,6 +2,11 @@ import { Prisma } from '@prisma/client'
 import PrismaClientInstance from '@Clients/Prisma/index'
 
 class ProcessingLogsModel {
+  /**
+   * Create a new log entry in the database, and return the ID of the new entry.
+   * @param [newLog] - Prisma.ProcessingLogsCreateInput - Object to create the log entry
+   * @returns The ID of the newly created log.
+   */
   async create(newLog?: Prisma.ProcessingLogsCreateInput) {
     try {
       const log = await PrismaClientInstance.processingLogs.create({
@@ -14,6 +19,11 @@ class ProcessingLogsModel {
     }
   }
 
+  /**
+   * @param {boolean} ready - boolean - this is a flag that tells the system that the job is ready and already processed
+   * @param {string} jobId - The id of the job.
+   * @returns The ProcessingLogs object
+   */
   async updateLog(ready: boolean, jobId: string) {
     try {
       const jobLog = await PrismaClientInstance.processingLogs.update({
@@ -27,6 +37,11 @@ class ProcessingLogsModel {
     }
   }
 
+  /**
+   * It returns the first processing log with the given jobId.
+   * @param {string} jobId - The id of the job you want to get the log for.
+   * @returns The ProcessingLogs object
+   */
   async getLog(jobId: string) {
     try {
       const jobLog = await PrismaClientInstance.processingLogs.findFirst({
@@ -39,6 +54,11 @@ class ProcessingLogsModel {
     }
   }
 
+  /**
+   * This function takes a jobId as a parameter, and then updates the database to mark the job as
+   * failed.
+   * @param {string} jobId - The id of the job that failed
+   */
   async markAsFailed(jobId: string) {
     try {
       await PrismaClientInstance.processingLogs.update({
