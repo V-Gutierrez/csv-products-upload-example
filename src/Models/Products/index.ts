@@ -71,6 +71,16 @@ class ProductsModel {
       throw new Error('createInBulkWithCSV error')
     }
   }
+
+  async delete(productId: string) {
+    try {
+      await PrismaClientInstance.products.delete({
+        where: { lm: productId },
+      })
+    } catch (error) {
+      throw new Error('delete error')
+    }
+  }
 }
 
 export default new ProductsModel()

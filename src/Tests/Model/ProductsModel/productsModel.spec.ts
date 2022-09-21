@@ -88,4 +88,33 @@ describe('Products Model tests', () => {
 
     expect.assertions(2)
   })
+
+  it('should delete a product successfully', async () => {
+    const id = 'FAKE_PRODUCT_ID'
+
+    jest
+      .spyOn(PrismaClientInstance.products, 'delete')
+      .mockImplementation(PrismaClientMock)
+
+    await ProductsModel.delete(id)
+
+    expect(PrismaClientMock).toHaveBeenCalledWith({ where: { lm: id } })
+  })
+  it('should throw if anything goes wrong', async () => {
+    const id = 'FAKE_PRODUCT_ID'
+
+    jest
+      .spyOn(PrismaClientInstance.products, 'delete')
+      .mockImplementation(PrismaClientMock)
+      .mockRejectedValue(() => {
+        throw new Error('Failed to delete')
+      })
+    try {
+      await ProductsModel.delete(id)
+    } catch (error) {
+      expect(error).toBeDefined()
+    }
+
+    expect.assertions(1)
+  })
 })
