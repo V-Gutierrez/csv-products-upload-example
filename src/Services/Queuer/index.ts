@@ -1,10 +1,10 @@
 import PQueue from 'p-queue'
 
 class Queuer {
-  queue: PQueue
+  private readonly queue: PQueue
 
-  constructor() {
-    this.queue = new PQueue({ concurrency: 1 })
+  constructor(queueInstance: PQueue) {
+    this.queue = queueInstance
   }
 
   /**
@@ -17,4 +17,4 @@ class Queuer {
   }
 }
 
-export default new Queuer()
+export default new Queuer(new PQueue({ concurrency: 1 }))

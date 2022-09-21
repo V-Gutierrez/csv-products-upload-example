@@ -67,7 +67,7 @@
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",
       "eslint --fix",
-      "jest --silent"
+      "jest --silent --passWithNoTests"
     ]
   },
   "nodemonConfig": {
