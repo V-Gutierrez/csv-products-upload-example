@@ -12,7 +12,7 @@ export default class StatusRouter {
    * @returns The route and method of the endpoint
    */
   getJobStatus() {
-    const params = { route: '/status/:jobId', method: 'GET' }
+    const params = { route: '/status/jobs/:jobId', method: 'GET' }
 
     this.app.get(params.route, async (req, res) => {
       try {
