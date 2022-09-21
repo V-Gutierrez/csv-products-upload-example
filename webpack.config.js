@@ -33,13 +33,10 @@ module.exports = {
         exclude: [
           // exclude any files you don't want to include, eg test files
           /__tests__/,
-          /Tests/
+          /Tests/,
         ],
       },
     ],
   },
-  externals: [nodeExternals()]
+  externals: [nodeExternals()],
 }
-
-
-

@@ -43,12 +43,11 @@ class ProccessingLogsModel {
     try {
       await PrismaClientInstance.proccessingLogs.update({
         where: { id: jobId },
-        data: { failure: true }
+        data: { failure: true },
       })
     } catch (error) {
       throw new Error('Error in markAsFailed method')
     }
-
   }
 }
 

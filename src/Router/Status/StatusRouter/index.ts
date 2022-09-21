@@ -23,7 +23,9 @@ export default class StatusRouter {
         if (!jobStatus) res.status(404).json({ error: 'Job not found' })
         else res.status(200).json(jobStatus)
       } catch (error) {
-        res.status(500).json({ error: 'An error occurred while getting all products' })
+        res
+          .status(500)
+          .json({ error: 'An error occurred while getting all products' })
       }
     })
 

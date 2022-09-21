@@ -17,6 +17,10 @@ export const fromCSVProductSample = {
   price: 123.42,
 }
 
-export const processingLogsInput = { ready: true, jobId: 'FAKE_JOB_ID', failure: false }
+export const processingLogsInput = {
+  ready: true,
+  jobId: 'FAKE_JOB_ID',
+  failure: false,
+}
 
 export const fakeFile = Buffer.alloc(1024 * 1024 * 10, '.')

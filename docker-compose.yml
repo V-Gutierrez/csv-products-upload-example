@@ -1,26 +1,26 @@
 services:
   node:
-    build: "."
+    build: '.'
     command: npm run start
     ports:
-      - "5000:5000"
+      - '5000:5000'
     volumes:
       - ./:/usr/app
     environment:
       - DATABASE_URL=postgresql://postgres:stagingleroymerlin@pgsql:5432/postgres?schema=public
     depends_on:
       - pgsql
-    container_name: "node"
+    container_name: 'node'
 
   pgsql:
-    image: "postgres"
+    image: 'postgres'
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: stagingleroymerlin
     ports:
-      - "5001:5432"
-    container_name: "pgsql"
+      - '5001:5432'
+    container_name: 'pgsql'
 
 volumes:
   pgdata:

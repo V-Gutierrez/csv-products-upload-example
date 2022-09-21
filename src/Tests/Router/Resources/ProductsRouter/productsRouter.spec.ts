@@ -12,7 +12,8 @@ const RouterInstance = new Router(AppInstance)
 const ExpressInstance = RouterInstance.useExpressInstance()
 const TestedRouterInstance = new ProductsRouter(ExpressInstance)
 
-const { route: GET_ALL_ROUTE, method: GET_ALL_METHOD } = TestedRouterInstance.getAll()
+const { route: GET_ALL_ROUTE, method: GET_ALL_METHOD } =
+  TestedRouterInstance.getAll()
 const { route: UPLOAD_FILE_ROUTE, method: UPLOAD_FILE_METHOD } =
   TestedRouterInstance.uploadProducts()
 
@@ -71,7 +72,9 @@ describe('Product Resource Routes', () => {
   })
 
   test(`responds to  ${UPLOAD_FILE_METHOD} ${UPLOAD_FILE_ROUTE} with error if no file is provided`, async () => {
-    jest.spyOn(ProcessingLogsModel, 'create').mockImplementation(ProcessingLogsModelMock)
+    jest
+      .spyOn(ProcessingLogsModel, 'create')
+      .mockImplementation(ProcessingLogsModelMock)
 
     const response = await request(ExpressInstance).post(UPLOAD_FILE_ROUTE)
 
