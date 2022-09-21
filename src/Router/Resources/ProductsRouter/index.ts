@@ -56,28 +56,36 @@ export default class ProductsRouter {
               .status(400)
               .json({ error: 'Invalid request. Upload file is missing' })
           else if (fileExtension !== 'csv')
-            res.status(400).json({ error: 'Invalid file type.' })
+            res
+              .status(400)
+              .json({ error: 'Invalid file type.' })
           else {
             const jobId = await ProccessingLogsModel.create()
 
             await Queuer.addToQueue(
               CSVReader.readFile(file.path, async (_, data) => {
-                const isCSVValid = CSVReader.validateSchema(
-                  [
-                    'lm',
-                    'name',
-                    'free_shipping',
-                    'description',
-                    'price',
-                    'category',
-                  ],
-                  data[0],
-                )
-                if (isCSVValid) {
+                try {
+                  const isCSVValid = CSVReader.validateSchema(
+                    [
+                      'lm',
+                      'name',
+                      'free_shipping',
+                      'description',
+                      'price',
+                      'category',
+                    ],
+                    data[0],
+                  )
+
+                  if (!isCSVValid) throw new Error("Invalid CSV file format")
+
                   await ProductsModel.createInBulkWithCSV(data)
                   await ProccessingLogsModel.updateLog(true, jobId as string)
+                } catch (error) {
+                  ProccessingLogsModel.markAsFailed(jobId as string)
                 }
-              }),
+              }
+              ),
             )
 
             res
