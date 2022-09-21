@@ -13,7 +13,7 @@ describe('Products Model tests', () => {
     const inputSample = [productSample, productSample]
 
     jest
-      .spyOn(PrismaClientInstance.product, 'createMany')
+      .spyOn(PrismaClientInstance.products, 'createMany')
       .mockImplementation(PrismaClientMock)
 
     await ProductsModel.bulkCreate(inputSample)
@@ -25,7 +25,7 @@ describe('Products Model tests', () => {
     const inputSample = [productSample, productSample]
 
     jest
-      .spyOn(PrismaClientInstance.product, 'create')
+      .spyOn(PrismaClientInstance.products, 'create')
       .mockImplementation(PrismaClientMock)
       .mockRejectedValue({ error: { code: 'P2002' } })
 
@@ -44,7 +44,7 @@ describe('Products Model tests', () => {
     const responseSample = [productSample, productSample, productSample]
 
     jest
-      .spyOn(PrismaClientInstance.product, 'findMany')
+      .spyOn(PrismaClientInstance.products, 'findMany')
       .mockImplementation(PrismaClientMock)
       .mockResolvedValue(responseSample)
 
@@ -55,7 +55,7 @@ describe('Products Model tests', () => {
 
   it('should return empty array if anything goes wrong', async () => {
     jest
-      .spyOn(PrismaClientInstance.product, 'findMany')
+      .spyOn(PrismaClientInstance.products, 'findMany')
       .mockImplementation(PrismaClientMock)
       .mockRejectedValue(null)
 

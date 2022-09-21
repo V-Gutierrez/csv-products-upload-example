@@ -5,11 +5,11 @@ import PrismaClientInstance from '@Clients/Prisma/index'
 class ProductsModel {
   /**
    * It takes an array of products, and creates them in the database
-   * @param {Prisma.ProductCreateInput[]} products - Prisma.ProductCreateInput[]
+   * @param {Prisma.ProductsCreateInput[]} products - Prisma.ProductsCreateInput[]
    */
-  async bulkCreate(products: Prisma.ProductCreateInput[]) {
+  async bulkCreate(products: Prisma.ProductsCreateInput[]) {
     try {
-      await PrismaClientInstance.product.createMany({
+      await PrismaClientInstance.products.createMany({
         data: products,
       })
     } catch (error) {
@@ -23,7 +23,7 @@ class ProductsModel {
    */
   async getAll() {
     try {
-      const allProducts = await PrismaClientInstance.product.findMany()
+      const allProducts = await PrismaClientInstance.products.findMany()
 
       return allProducts
     } catch (error) {
@@ -65,7 +65,7 @@ class ProductsModel {
       })
 
       await this.bulkCreate(
-        parsedData as unknown as Prisma.ProductCreateInput[],
+        parsedData as unknown as Prisma.ProductsCreateInput[],
       )
     } catch (error) {
       throw new Error('createInBulkWithCSV error')

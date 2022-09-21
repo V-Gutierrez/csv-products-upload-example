@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Product {
+model Products {
   lm            String  @unique
   name          String
   free_shipping Boolean
