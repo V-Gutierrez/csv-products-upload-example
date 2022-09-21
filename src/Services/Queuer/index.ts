@@ -3,6 +3,11 @@ import PQueue from 'p-queue'
 class Queuer {
   private readonly queue: PQueue
 
+  /**
+   * The constructor function is a special function that is called when an object is created from a
+   * class
+   * @param {PQueue} queueInstance - The instance of the queue that you want to use.
+   */
   constructor(queueInstance: PQueue) {
     this.queue = queueInstance
   }
