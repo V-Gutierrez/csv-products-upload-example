@@ -1,7 +1,7 @@
 import { Express } from 'express'
 import Middlewares from '@Middlewares/index'
 import ProductsRouter from '@Router/Resources/ProductsRouter'
-import StatusRouter from '@Router/Status/StatusRouter'
+import JobsRouter from '@Router/Resources/StatusRouter'
 
 /* It's a class that creates a new instance of the Middlewares class and the other Router classes */
 export default class Router {
@@ -10,7 +10,7 @@ export default class Router {
 
     new Middlewares(this.app)
     new ProductsRouter(this.app)
-    new StatusRouter(this.app)
+    new JobsRouter(this.app)
   }
 
   /**

@@ -1,7 +1,7 @@
 import ProcessingLogsModel from '@Models/ProcessingLogs/index'
 import { Express } from 'express'
 
-export default class StatusRouter {
+export default class JobsRouter {
   constructor(private readonly app: Express) {
     this.app = app
     this.getJobStatus()
@@ -12,7 +12,7 @@ export default class StatusRouter {
    * @returns The route and method of the endpoint
    */
   getJobStatus() {
-    const params = { route: '/status/jobs/:jobId', method: 'GET' }
+    const params = { route: '/resources/jobs/:jobId', method: 'GET' }
 
     this.app.get(params.route, async (req, res) => {
       try {
@@ -25,7 +25,7 @@ export default class StatusRouter {
       } catch (error) {
         res
           .status(500)
-          .json({ error: 'An error occurred while getting all products' })
+          .json({ error: 'An error occurred while retrieving job status' })
       }
     })
 

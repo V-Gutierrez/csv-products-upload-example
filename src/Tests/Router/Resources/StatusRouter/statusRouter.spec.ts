@@ -1,14 +1,14 @@
 import PrismaClientInstance from '@Clients/Prisma'
 import request from 'supertest'
 import express from 'express'
-import StatusRouter from '@Router/Status/StatusRouter'
+import JobsRouter from '@Router/Resources/StatusRouter'
 import Router from '@Router/index'
 import { processingLogsInput } from '@Tests/Mocks'
 
 const AppInstance = express()
 const RouterInstance = new Router(AppInstance)
 const ExpressInstance = RouterInstance.useExpressInstance()
-const TestedRouterInstance = new StatusRouter(ExpressInstance)
+const TestedRouterInstance = new JobsRouter(ExpressInstance)
 
 const { route: GET_JOB_STATUS_ROUTE, method: GET_JOB_STATUS_METHOD } =
   TestedRouterInstance.getJobStatus()
