@@ -14,6 +14,7 @@ describe('ProcessingLogs Model tests', () => {
       id: 'fake_cuid',
       ready: false,
       createdAt: new Date(Date.now()),
+      failure: false
     }
 
     jest
@@ -99,5 +100,35 @@ describe('ProcessingLogs Model tests', () => {
 
     expect(PrismaClientMock).toHaveBeenCalled()
     expect(searchResponse).toBe(expectedOutput)
+  })
+  it('should update a log with failure status when needed', async () => {
+    const { jobId } = processingLogsInput
+
+    jest
+      .spyOn(PrismaClientInstance.proccessingLogs, 'update')
+      .mockImplementation(PrismaClientMock)
+
+    await ProccessingLogs.markAsFailed(jobId)
+
+    expect(PrismaClientMock).toHaveBeenCalled()
+    expect(PrismaClientMock).toHaveBeenCalledWith({ data: { failure: true }, where: { id: jobId } })
+  })
+  it('should throw if something goes wrong while updating failure status', async () => {
+    const { jobId } = processingLogsInput
+
+    jest
+      .spyOn(PrismaClientInstance.proccessingLogs, 'update')
+      .mockImplementation(PrismaClientMock.mockImplementation(() => {
+        throw new Error(`Job ${jobId}`)
+      }))
+
+    try {
+      await ProccessingLogs.markAsFailed(jobId)
+    } catch (error) {
+      expect(error).toBeDefined()
+      expect(PrismaClientMock).toThrow()
+    }
+
+    expect.assertions(2)
   })
 })

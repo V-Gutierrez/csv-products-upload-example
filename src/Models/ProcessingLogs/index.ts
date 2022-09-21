@@ -38,6 +38,18 @@ class ProccessingLogsModel {
       return null
     }
   }
+
+  async markAsFailed(jobId: string) {
+    try {
+      await PrismaClientInstance.proccessingLogs.update({
+        where: { id: jobId },
+        data: { failure: true }
+      })
+    } catch (error) {
+      throw new Error('Error in markAsFailed method')
+    }
+
+  }
 }
 
 export default new ProccessingLogsModel()
