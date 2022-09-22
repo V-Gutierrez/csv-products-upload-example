@@ -100,6 +100,25 @@ class ProductsModel {
       return null
     }
   }
+
+  /**
+   * It updates a product in the database
+   * @param {string} productId - The product id that we want to update.
+   * @param data - Prisma.ProductsUpdateInput
+   * @returns The product that was updated.
+   */
+  async update(productId: string, data: Prisma.ProductsUpdateInput) {
+    try {
+      const product = await Products.update({
+        where: { lm: productId },
+        data,
+      })
+
+      return product
+    } catch (error) {
+      return null
+    }
+  }
 }
 
 export default new ProductsModel()

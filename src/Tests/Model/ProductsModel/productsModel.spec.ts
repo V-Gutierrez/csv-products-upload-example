@@ -145,4 +145,35 @@ describe('Products Model tests', () => {
     expect(PrismaClientMock).toHaveBeenCalledWith(PrismaWhereClause({ lm: id }))
     expect(products).toBe(null)
   })
+  it('ProductsModel.update ~ should update and return updated product ', async () => {
+    const id = 'FAKE_EDITED_PRODUCT_ID'
+    const updateData = { description: 'NEW_DESCRIPTION' }
+    const expectedResponse = {
+      ...productSample,
+      description: updateData.description,
+    }
+
+    jest
+      .spyOn(Products, 'update')
+      .mockImplementation(PrismaClientMock)
+      .mockResolvedValue(expectedResponse)
+
+    const product = await ProductsModel.update(id, updateData)
+
+    expect(product).toBe(expectedResponse)
+  })
+  it('ProductsModel.update ~ should not update and return null in error case ', async () => {
+    const id = 'FAKE_EDITED_PRODUCT_ID'
+    const updateData = { description: 'NEW_DESCRIPTION' }
+
+    jest.spyOn(Products, 'update').mockImplementation(
+      PrismaClientMock.mockImplementation(() => {
+        throw new Error('Error updating')
+      }),
+    )
+
+    const product = await ProductsModel.update(id, updateData)
+
+    expect(product).toBe(null)
+  })
 })
