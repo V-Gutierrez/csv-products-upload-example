@@ -107,11 +107,17 @@ class ProductsModel {
    * @param data - Prisma.ProductsUpdateInput
    * @returns The product that was updated.
    */
-  async update(productId: string, data: Prisma.ProductsUpdateInput) {
+  async update(productId: string, productData: Prisma.ProductsUpdateInput) {
+    const { free_shipping, price } = productData
+
     try {
       const product = await Products.update({
         where: { lm: productId },
-        data,
+        data: {
+          ...productData,
+          free_shipping: Boolean(free_shipping),
+          price: Number.isNaN(Number(price)) ? undefined : Number(price),
+        },
       })
 
       return product

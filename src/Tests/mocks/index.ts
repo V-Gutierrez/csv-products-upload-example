@@ -43,3 +43,16 @@ export const fakeFile = Buffer.alloc(1024 * 1024 * 10, '.')
 export const PrismaWhereClause = function <T>(constraint: T) {
   return { where: constraint }
 }
+
+/**
+ * > This function takes in a data object and a where constraint object and returns a Prisma update
+ * where clause object
+ * @param {T} data - The data you want to update.
+ * @param {K} whereConstraint - This is the where clause that you want to use to update the data.
+ * @returns A function that takes two arguments, data and whereConstraint, and returns an object with
+ * two properties, where and data.
+ */
+// eslint-disable-next-line func-names
+export const PrismaUpdateWhereClause = function <T, K>(data: T, whereConstraint: K) {
+  return { where: whereConstraint, data }
+}
