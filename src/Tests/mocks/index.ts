@@ -23,4 +23,12 @@ export const processingLogsInput = {
   failure: false,
 }
 
+export const processingLog = {
+  ready: true,
+  jobId: 'FAKE_JOB_ID',
+  failure: false,
+  id: 'fake_cuid',
+  createdAt: new Date(Date.now()),
+}
+
 export const fakeFile = Buffer.alloc(1024 * 1024 * 10, '.')

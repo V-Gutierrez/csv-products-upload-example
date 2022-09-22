@@ -11,6 +11,7 @@ export default class ProductsRouter {
     this.app = app
     this.getAll()
     this.uploadProducts()
+    this.delete()
   }
 
   /**
@@ -99,6 +100,26 @@ export default class ProductsRouter {
         }
       },
     )
+
+    return params
+  }
+
+  delete() {
+    const params = { route: '/resources/products/:productId', method: 'DELETE' }
+
+    this.app.delete(params.route, async (req, res) => {
+      try {
+        const { productId } = req.params
+
+        await ProductsModel.delete(productId)
+
+        res.status(200).json({
+          message: `Product ${productId} deleted successfully`,
+        })
+      } catch (error) {
+        res.status(500).json({ error: 'Error deleting product' })
+      }
+    })
 
     return params
   }

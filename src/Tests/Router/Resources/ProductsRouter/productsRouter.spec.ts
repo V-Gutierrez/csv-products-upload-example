@@ -4,7 +4,8 @@ import Router from '@Router/index'
 import request from 'supertest'
 import express from 'express'
 import ProductsRouter from '@Router/Resources/ProductsRouter'
-import { fakeFile, productSample } from '@Tests/Mocks'
+import { ProcessingLogs } from '@Clients/Prisma'
+import { fakeFile, processingLog, productSample } from '@Tests/Mocks'
 
 const AppInstance = express()
 const RouterInstance = new Router(AppInstance)
@@ -14,12 +15,17 @@ const TestedRouterInstance = new ProductsRouter(ExpressInstance)
 
 const { route: GET_ALL_ROUTE, method: GET_ALL_METHOD } =
   TestedRouterInstance.getAll()
+
 const { route: UPLOAD_FILE_ROUTE, method: UPLOAD_FILE_METHOD } =
   TestedRouterInstance.uploadProducts()
+
+const { route: DELETE_PRODUCT_ROUTE, method: DELETE_PRODUCT_METHOD } =
+  TestedRouterInstance.delete()
 
 describe('Product Resource Routes', () => {
   const ProductsModelMock = jest.fn()
   const ProcessingLogsModelMock = jest.fn()
+  const PrismaClientMock = jest.fn()
 
   beforeAll(() => {
     jest.clearAllMocks()
@@ -58,6 +64,11 @@ describe('Product Resource Routes', () => {
       .mockImplementation(ProcessingLogsModelMock)
       .mockResolvedValue(expectedJobId)
 
+    jest
+      .spyOn(ProcessingLogs, 'update')
+      .mockImplementation(PrismaClientMock)
+      .mockResolvedValue(processingLog)
+
     const response = await request(ExpressInstance)
       .post(UPLOAD_FILE_ROUTE)
       .attach('products_csv', fakeFile, {
@@ -82,5 +93,38 @@ describe('Product Resource Routes', () => {
     expect(response.body).toEqual({
       error: 'Invalid request. Upload file is missing',
     })
+  })
+
+  test(`responds to  ${DELETE_PRODUCT_METHOD} ${DELETE_PRODUCT_ROUTE} with success if delete is successful`, async () => {
+    const routeWithParams = DELETE_PRODUCT_ROUTE.replace(
+      ':productId',
+      'FAKE_PRODUCT_ID',
+    )
+
+    jest
+      .spyOn(ProductsModel, 'delete')
+      .mockImplementation(ProductsModelMock)
+      .mockResolvedValue()
+
+    const response = await request(ExpressInstance).delete(routeWithParams)
+
+    expect(response.statusCode).toBe(200)
+  })
+  test(`responds to  ${DELETE_PRODUCT_METHOD} ${DELETE_PRODUCT_ROUTE} with 500 if there is a server side problem`, async () => {
+    const routeWithParams = DELETE_PRODUCT_ROUTE.replace(
+      ':productId',
+      'FAKE_PRODUCT_ID',
+    )
+
+    jest.spyOn(ProductsModel, 'delete').mockImplementation(
+      ProductsModelMock.mockImplementation(() => {
+        throw new Error('Server Error')
+      }),
+    )
+
+    const response = await request(ExpressInstance).delete(routeWithParams)
+
+    expect(response.statusCode).toBe(500)
+    expect(response.body).toBeDefined()
   })
 })
