@@ -9,7 +9,7 @@ describe('Products Model tests', () => {
     jest.clearAllMocks()
   })
 
-  it('should add products properly', async () => {
+  it('ProductsModel.bulkCreate ~ should add products properly', async () => {
     const inputSample = [productSample, productSample]
 
     jest.spyOn(Products, 'createMany').mockImplementation(PrismaClientMock)
@@ -19,7 +19,7 @@ describe('Products Model tests', () => {
     expect(PrismaClientMock).toBeCalled()
     expect(PrismaClientMock).toHaveBeenCalledWith({ data: inputSample })
   })
-  it('should not throw if products already exists or if Prisma throws', async () => {
+  it('ProductsModel.bulkCreate ~ should not throw if products already exists or if Prisma throws', async () => {
     const inputSample = [productSample, productSample]
 
     jest
@@ -38,7 +38,7 @@ describe('Products Model tests', () => {
     expect.assertions(1)
   })
 
-  it('should return products properly', async () => {
+  it('ProductsModel.getAll ~ should return products properly', async () => {
     const responseSample = [productSample, productSample, productSample]
 
     jest
@@ -51,7 +51,7 @@ describe('Products Model tests', () => {
     expect(response).toEqual(responseSample)
   })
 
-  it('should return empty array if anything goes wrong', async () => {
+  it('ProductsModel.getAll ~ should return empty array if anything goes wrong', async () => {
     jest
       .spyOn(Products, 'findMany')
       .mockImplementation(PrismaClientMock)
@@ -62,7 +62,7 @@ describe('Products Model tests', () => {
     expect(response).toEqual([])
   })
 
-  it('should throw when CSV contains invalid numeric values', async () => {
+  it('ProductsModel.createInBulkWithCSV ~~ should throw when CSV contains invalid numeric values', async () => {
     const csvHeaderSample = Object.keys(fromCSVProductSample)
     const inputSample = [
       csvHeaderSample,
@@ -87,7 +87,7 @@ describe('Products Model tests', () => {
     expect.assertions(2)
   })
 
-  it('should delete a product successfully', async () => {
+  it('ProductsModel.delete ~ should delete a product successfully', async () => {
     const id = 'FAKE_PRODUCT_ID'
 
     jest.spyOn(Products, 'delete').mockImplementation(PrismaClientMock)
@@ -96,7 +96,7 @@ describe('Products Model tests', () => {
 
     expect(PrismaClientMock).toHaveBeenCalledWith({ where: { lm: id } })
   })
-  it('should throw if anything goes wrong', async () => {
+  it('ProductsModel.delete ~ should throw if anything goes wrong while deleting', async () => {
     const id = 'FAKE_PRODUCT_ID'
 
     jest
@@ -112,5 +112,34 @@ describe('Products Model tests', () => {
     }
 
     expect.assertions(1)
+  })
+  it('ProductsModel.getOne ~ should successfully return a product ', async () => {
+    const id = 'FAKE_PRODUCT_ID'
+
+    jest
+      .spyOn(Products, 'findFirst')
+      .mockImplementation(PrismaClientMock)
+      .mockResolvedValue(productSample)
+
+    const product = await ProductsModel.getOne(id)
+
+    expect(product).not.toBeNull()
+    expect(product).toEqual(product)
+    expect(PrismaClientMock).toHaveBeenCalledWith({ where: { lm: id } })
+  })
+  it('ProductsModel.getOne ~ should return null in error case ', async () => {
+    const id = 'FAKE_PRODUCT_ID'
+
+    jest
+      .spyOn(Products, 'findFirst')
+      .mockImplementation(PrismaClientMock)
+      .mockRejectedValue(() => {
+        throw new Error('Failed to delete')
+      })
+
+    const products = await ProductsModel.getOne(id)
+
+    expect(PrismaClientMock).toHaveBeenCalledWith({ where: { lm: id } })
+    expect(products).toBe(null)
   })
 })

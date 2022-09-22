@@ -9,7 +9,7 @@ describe('ProcessingLogs Model tests', () => {
     jest.clearAllMocks()
   })
 
-  it('should create a log', async () => {
+  it("ProcessingLogsModel.create ~ should create a log and return it's id", async () => {
     const mockedLog = {
       id: 'fake_cuid',
       ready: false,
@@ -27,7 +27,7 @@ describe('ProcessingLogs Model tests', () => {
     expect(id).toBe(mockedLog.id)
   })
 
-  it('should return null in error case', async () => {
+  it('ProcessingLogsModel.create ~ should return null in error case', async () => {
     jest
       .spyOn(ProcessingLogs, 'create')
       .mockImplementation(PrismaClientMock)
@@ -38,7 +38,7 @@ describe('ProcessingLogs Model tests', () => {
     expect(id).toBe(null)
   })
 
-  it('should successfully update a log', async () => {
+  it('ProcessingLogsModel.updateLog ~ should successfully update a log', async () => {
     const { ready, jobId } = processingLogsInput
 
     jest.spyOn(ProcessingLogs, 'update').mockImplementation(PrismaClientMock)
@@ -51,7 +51,7 @@ describe('ProcessingLogs Model tests', () => {
     })
   })
 
-  it('should return null if log update goes wrong', async () => {
+  it('ProcessingLogsModel.updateLog ~ should return null if log update goes wrong', async () => {
     const { ready, jobId } = processingLogsInput
 
     jest
@@ -67,7 +67,7 @@ describe('ProcessingLogs Model tests', () => {
     })
     expect(updateResponse).toBe(null)
   })
-  it('should return null if search update goes wrong', async () => {
+  it('ProcessingLogsModel.getLog ~ should return null if search update goes wrong', async () => {
     const { jobId } = processingLogsInput
 
     jest
@@ -80,7 +80,7 @@ describe('ProcessingLogs Model tests', () => {
     expect(PrismaClientMock).toHaveBeenCalled()
     expect(searchResponse).toBe(null)
   })
-  it('should return log in successful search', async () => {
+  it('ProcessingLogsModel.getLog ~ should return log in successful search', async () => {
     const { jobId } = processingLogsInput
     const expectedOutput = {
       ...processingLogsInput,
@@ -99,7 +99,7 @@ describe('ProcessingLogs Model tests', () => {
     expect(PrismaClientMock).toHaveBeenCalled()
     expect(searchResponse).toBe(expectedOutput)
   })
-  it('should update a log with failure status when needed', async () => {
+  it('ProcessingLogsModel.markAsFailed ~ should update a log with failure status when needed', async () => {
     const { jobId } = processingLogsInput
 
     jest.spyOn(ProcessingLogs, 'update').mockImplementation(PrismaClientMock)
@@ -112,7 +112,7 @@ describe('ProcessingLogs Model tests', () => {
       where: { id: jobId },
     })
   })
-  it('should throw if something goes wrong while updating failure status', async () => {
+  it('ProcessingLogsModel.markAsFailed ~ should throw if something goes wrong while updating failure status', async () => {
     const { jobId } = processingLogsInput
 
     jest.spyOn(ProcessingLogs, 'update').mockImplementation(
