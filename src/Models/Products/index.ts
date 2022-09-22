@@ -72,6 +72,10 @@ class ProductsModel {
     }
   }
 
+  /**
+   * It deletes a product from the database
+   * @param {string} productId - The product id to delete
+   */
   async delete(productId: string) {
     try {
       await Products.delete({
@@ -79,6 +83,21 @@ class ProductsModel {
       })
     } catch (error) {
       throw new Error('delete error')
+    }
+  }
+
+  /**
+   * This function will return a product if it exists, otherwise it will return null.
+   * @param {string} productId - string
+   * @returns The product object
+   */
+  async getOne(productId: string) {
+    try {
+      const product = await Products.findFirst({ where: { lm: productId } })
+
+      return product
+    } catch (error) {
+      return null
     }
   }
 }
