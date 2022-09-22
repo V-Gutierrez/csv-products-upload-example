@@ -1,6 +1,10 @@
 import { Products } from '@Clients/Prisma/'
 import ProductsModel from '@Models/Products'
-import { productSample, fromCSVProductSample } from '@Tests/Mocks'
+import {
+  productSample,
+  fromCSVProductSample,
+  PrismaWhereClause,
+} from '@Tests/Mocks'
 
 describe('Products Model tests', () => {
   const PrismaClientMock = jest.fn()
@@ -94,7 +98,7 @@ describe('Products Model tests', () => {
 
     await ProductsModel.delete(id)
 
-    expect(PrismaClientMock).toHaveBeenCalledWith({ where: { lm: id } })
+    expect(PrismaClientMock).toHaveBeenCalledWith(PrismaWhereClause({ lm: id }))
   })
   it('ProductsModel.delete ~ should throw if anything goes wrong while deleting', async () => {
     const id = 'FAKE_PRODUCT_ID'
@@ -125,7 +129,7 @@ describe('Products Model tests', () => {
 
     expect(product).not.toBeNull()
     expect(product).toEqual(product)
-    expect(PrismaClientMock).toHaveBeenCalledWith({ where: { lm: id } })
+    expect(PrismaClientMock).toHaveBeenCalledWith(PrismaWhereClause({ lm: id }))
   })
   it('ProductsModel.getOne ~ should return null in error case ', async () => {
     const id = 'FAKE_PRODUCT_ID'
@@ -139,7 +143,7 @@ describe('Products Model tests', () => {
 
     const products = await ProductsModel.getOne(id)
 
-    expect(PrismaClientMock).toHaveBeenCalledWith({ where: { lm: id } })
+    expect(PrismaClientMock).toHaveBeenCalledWith(PrismaWhereClause({ lm: id }))
     expect(products).toBe(null)
   })
 })

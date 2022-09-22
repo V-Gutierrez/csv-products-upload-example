@@ -32,3 +32,8 @@ export const processingLog = {
 }
 
 export const fakeFile = Buffer.alloc(1024 * 1024 * 10, '.')
+
+// eslint-disable-next-line func-names
+export const PrismaWhereClause = function <T>(constraint: T) {
+  return { where: constraint }
+}
