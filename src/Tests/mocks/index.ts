@@ -33,6 +33,12 @@ export const processingLog = {
 
 export const fakeFile = Buffer.alloc(1024 * 1024 * 10, '.')
 
+/**
+ * It takes a constraint object and returns a Prisma where clause object
+ * @param {T} constraint - T - This is the constraint that you want to apply to the where clause.
+ * @returns A function that takes a constraint and returns an object with a where property.
+ * @description This function provides a context for who is reading the code
+ */
 // eslint-disable-next-line func-names
 export const PrismaWhereClause = function <T>(constraint: T) {
   return { where: constraint }
