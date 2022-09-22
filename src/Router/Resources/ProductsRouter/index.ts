@@ -111,6 +111,15 @@ export default class ProductsRouter {
       try {
         const { productId } = req.params
 
+        const product = await ProductsModel.getOne(productId)
+
+        if (!product) {
+          res.status(404).json({
+            error: 'Product not found',
+          })
+          return
+        }
+
         await ProductsModel.delete(productId)
 
         res.status(200).json({

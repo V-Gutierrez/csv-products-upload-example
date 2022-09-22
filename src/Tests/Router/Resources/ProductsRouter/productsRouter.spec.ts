@@ -102,6 +102,11 @@ describe('Product Resource Routes', () => {
     )
 
     jest
+      .spyOn(ProductsModel, 'getOne')
+      .mockImplementation(ProductsModelMock)
+      .mockResolvedValue(productSample)
+
+    jest
       .spyOn(ProductsModel, 'delete')
       .mockImplementation(ProductsModelMock)
       .mockResolvedValue()
@@ -125,6 +130,27 @@ describe('Product Resource Routes', () => {
     const response = await request(ExpressInstance).delete(routeWithParams)
 
     expect(response.statusCode).toBe(500)
+    expect(response.body).toBeDefined()
+  })
+  test(`responds to  ${DELETE_PRODUCT_METHOD} ${DELETE_PRODUCT_ROUTE} with 404 if there is no products`, async () => {
+    const routeWithParams = DELETE_PRODUCT_ROUTE.replace(
+      ':productId',
+      'FAKE_PRODUCT_ID',
+    )
+
+    jest
+      .spyOn(ProductsModel, 'getOne')
+      .mockImplementation(ProductsModelMock)
+      .mockResolvedValue(null)
+
+    jest
+      .spyOn(ProductsModel, 'delete')
+      .mockImplementation(ProductsModelMock)
+      .mockResolvedValue()
+
+    const response = await request(ExpressInstance).delete(routeWithParams)
+
+    expect(response.statusCode).toBe(404)
     expect(response.body).toBeDefined()
   })
 })
