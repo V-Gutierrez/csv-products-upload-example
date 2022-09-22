@@ -22,6 +22,9 @@ const { route: UPLOAD_FILE_ROUTE, method: UPLOAD_FILE_METHOD } =
 const { route: DELETE_PRODUCT_ROUTE, method: DELETE_PRODUCT_METHOD } =
   TestedRouterInstance.delete()
 
+const { route: UPDATE_ROUTE, method: UPDATE_METHOD } =
+  TestedRouterInstance.update()
+
 describe('Product Resource Routes', () => {
   const ProductsModelMock = jest.fn()
   const ProcessingLogsModelMock = jest.fn()
@@ -151,6 +154,91 @@ describe('Product Resource Routes', () => {
     const response = await request(ExpressInstance).delete(routeWithParams)
 
     expect(response.statusCode).toBe(404)
+    expect(response.body).toBeDefined()
+  })
+  test(`responds to  ${UPDATE_ROUTE} ${UPDATE_METHOD} with 404 if there is no product`, async () => {
+    const routeWithParams = DELETE_PRODUCT_ROUTE.replace(
+      ':productId',
+      'FAKE_PRODUCT_ID',
+    )
+
+    jest
+      .spyOn(ProductsModel, 'getOne')
+      .mockImplementation(ProductsModelMock)
+      .mockResolvedValue(null)
+
+    const response = await request(ExpressInstance).put(routeWithParams)
+
+    expect(response.statusCode).toBe(404)
+    expect(response.body).toBeDefined()
+  })
+  test(`responds to  ${UPDATE_ROUTE} ${UPDATE_METHOD} with 204 if no request body is sent`, async () => {
+    const routeWithParams = DELETE_PRODUCT_ROUTE.replace(
+      ':productId',
+      'FAKE_PRODUCT_ID',
+    )
+
+    jest
+      .spyOn(ProductsModel, 'getOne')
+      .mockImplementation(ProductsModelMock)
+      .mockResolvedValue(productSample)
+
+    const response = await request(ExpressInstance).put(routeWithParams)
+
+    expect(response.statusCode).toBe(204)
+  })
+  test(`responds to  ${UPDATE_ROUTE} ${UPDATE_METHOD} with 201 if the resource was updated`, async () => {
+    const routeWithParams = DELETE_PRODUCT_ROUTE.replace(
+      ':productId',
+      'FAKE_PRODUCT_ID',
+    )
+
+    const requestBody = {
+      description: 'My new description',
+    }
+
+    jest
+      .spyOn(ProductsModel, 'getOne')
+      .mockImplementation(ProductsModelMock)
+      .mockResolvedValue(productSample)
+
+    jest
+      .spyOn(ProductsModel, 'update')
+      .mockImplementation(ProductsModelMock)
+      .mockResolvedValue({
+        ...productSample,
+        description: requestBody.description,
+      })
+
+    const response = await request(ExpressInstance)
+      .put(routeWithParams)
+      .send(requestBody)
+
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toBeDefined()
+    expect(response.body).toHaveProperty('product')
+  })
+  test(`responds to  ${UPDATE_ROUTE} ${UPDATE_METHOD} with 500 there is an error`, async () => {
+    const routeWithParams = DELETE_PRODUCT_ROUTE.replace(
+      ':productId',
+      'FAKE_PRODUCT_ID',
+    )
+
+    const requestBody = {
+      description: 'My new description',
+    }
+
+    jest.spyOn(ProductsModel, 'getOne').mockImplementation(
+      ProductsModelMock.mockImplementation(() => {
+        throw new Error('Server Error')
+      }),
+    )
+
+    const response = await request(ExpressInstance)
+      .put(routeWithParams)
+      .send(requestBody)
+
+    expect(response.statusCode).toBe(500)
     expect(response.body).toBeDefined()
   })
 })

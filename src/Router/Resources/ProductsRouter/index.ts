@@ -1,9 +1,11 @@
+/* eslint-disable camelcase */
 import Middlewares from '@Middlewares/index'
 import ProductsModel from '@Models/Products'
 import ProcessingLogsModel from '@Models/ProcessingLogs/index'
 import { Express } from 'express'
 import CSVReader from '@Services/CSVReader'
 import Queuer from '@Services/Queuer'
+import { Products as ProductType } from '@prisma/client'
 
 /* It's a router for the products resource */
 export default class ProductsRouter {
@@ -12,11 +14,12 @@ export default class ProductsRouter {
     this.getAll()
     this.uploadProducts()
     this.delete()
+    this.update()
   }
 
   /**
    * It creates a route that returns all products from the database
-   * @returns An object with the route and method
+   * @returns The route and method of the endpoint
    */
   getAll() {
     const params = { route: '/resources/products', method: 'GET' }
@@ -38,7 +41,7 @@ export default class ProductsRouter {
 
   /**
    * It creates a new log entry in the database, then sends the file to a queue for processing
-   * @returns An object with the route and method of the endpoint.
+   * @returns The route and method of the endpoint
    */
   uploadProducts() {
     const params = { route: '/resources/products', method: 'POST' }
@@ -104,6 +107,10 @@ export default class ProductsRouter {
     return params
   }
 
+  /**
+   * It deletes a product from the database
+   * @returns The route and method of the endpoint
+   */
   delete() {
     const params = { route: '/resources/products/:productId', method: 'DELETE' }
 
@@ -117,16 +124,66 @@ export default class ProductsRouter {
           res.status(404).json({
             error: 'Product not found',
           })
-          return
+        } else {
+          await ProductsModel.delete(productId)
+
+          res.status(200).json({
+            message: `Product ${productId} deleted successfully`,
+          })
         }
-
-        await ProductsModel.delete(productId)
-
-        res.status(200).json({
-          message: `Product ${productId} deleted successfully`,
-        })
       } catch (error) {
         res.status(500).json({ error: 'Error deleting product' })
+      }
+    })
+
+    return params
+  }
+
+  /**
+   * It updates a product in the database
+   * @returns The route and method of the endpoint.
+   */
+  update() {
+    const params = { route: '/resources/products/:productId', method: 'PUT' }
+
+    this.app.put(params.route, async (req, res) => {
+      try {
+        const { productId } = req.params
+        const { category, description, free_shipping, name, price } =
+          req.body as ProductType
+
+        const newProductData = {
+          category,
+          description,
+          free_shipping,
+          name,
+          price,
+        }
+
+        const noRequestBodyIsSent =
+          Object.values(newProductData).every((value) => value === undefined) ||
+          !req.body
+        const product = await ProductsModel.getOne(productId)
+
+        if (!product) {
+          res.status(404).json({ message: 'Product not found' })
+        } else if (noRequestBodyIsSent) {
+          res.sendStatus(204)
+        } else {
+          const updatedProduct = await ProductsModel.update(
+            productId,
+            newProductData,
+          )
+
+          res
+            .status(200)
+            .json({
+              message: 'Product updated successfully',
+              product: updatedProduct,
+            })
+        }
+      } catch (error) {
+        res.status(500).json({ error: 'Error editing product' })
       }
     })
 
