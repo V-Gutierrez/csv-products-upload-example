@@ -4,6 +4,7 @@ import {
   productSample,
   fromCSVProductSample,
   PrismaWhereClause,
+  PrismaUpdateWhereClause,
 } from '@Tests/Mocks'
 
 describe('Products Model tests', () => {
@@ -175,5 +176,47 @@ describe('Products Model tests', () => {
     const product = await ProductsModel.update(id, updateData)
 
     expect(product).toBe(null)
+  })
+  it('ProductsModel.update ~ should cast free_shipping and price types on input', async () => {
+    const id = 'FAKE_EDITED_PRODUCT_ID'
+    const updateData = {
+      description: 'NEW_DESCRIPTION',
+      price: '123.3',
+      free_shipping: 'NOT_A_BOOLEAN',
+    }
+
+    jest.spyOn(Products, 'update').mockImplementation(PrismaClientMock)
+
+    // @ts-ignore
+    await ProductsModel.update(id, updateData)
+
+    expect(PrismaClientMock).toHaveBeenCalledWith(
+      PrismaUpdateWhereClause(
+        {
+          description: updateData.description,
+          price: Number(updateData.price),
+          free_shipping: Boolean(updateData.free_shipping),
+        },
+        { lm: id },
+      ),
+    )
+  })
+  it('ProductsModel.update ~ should not edit price if input is not a number', async () => {
+    jest.resetModules()
+
+    const id = 'FAKE_EDITED_PRODUCT_ID_2'
+    const updateData = { price: 'NOT_A_NUMBER' }
+
+    jest.spyOn(Products, 'update').mockImplementation(PrismaClientMock)
+
+    // @ts-ignore
+    await ProductsModel.update(id, updateData)
+
+    expect(PrismaClientMock).toHaveBeenCalledWith(
+      PrismaUpdateWhereClause(
+        { price: undefined, free_shipping: false },
+        { lm: id },
+      ),
+    )
   })
 })
