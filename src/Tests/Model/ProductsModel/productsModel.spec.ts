@@ -23,23 +23,22 @@ describe('Products Model tests', () => {
     expect(PrismaClientMock).toBeCalled()
     expect(PrismaClientMock).toHaveBeenCalledWith({ data: inputSample })
   })
-  it('ProductsModel.bulkCreate ~ should not throw if products already exists or if Prisma throws', async () => {
+  it('ProductsModel.bulkCreate ~ should throw if Prisma throws or rejects', async () => {
     const inputSample = [productSample, productSample]
 
     jest
-      .spyOn(Products, 'create')
+      .spyOn(Products, 'createMany')
       .mockImplementation(PrismaClientMock)
       .mockRejectedValue({ error: { code: 'P2002' } })
 
     try {
       await ProductsModel.bulkCreate(inputSample)
     } catch (error) {
-      // should not be called
       expect(error).toBeDefined()
     }
 
     expect(PrismaClientMock).toBeCalled()
-    expect.assertions(1)
+    expect.assertions(2)
   })
 
   it('ProductsModel.getAll ~ should return products properly', async () => {
