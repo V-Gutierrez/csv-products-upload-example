@@ -156,7 +156,7 @@ describe('Product Resource Routes', () => {
     expect(response.statusCode).toBe(404)
     expect(response.body).toBeDefined()
   })
-  test(`responds to  ${UPDATE_ROUTE} ${UPDATE_METHOD} with 404 if there is no product`, async () => {
+  test(`responds to  ${UPDATE_METHOD} ${UPDATE_ROUTE}  with 404 if there is no product`, async () => {
     const routeWithParams = DELETE_PRODUCT_ROUTE.replace(
       ':productId',
       'FAKE_PRODUCT_ID',
@@ -167,12 +167,12 @@ describe('Product Resource Routes', () => {
       .mockImplementation(ProductsModelMock)
       .mockResolvedValue(null)
 
-    const response = await request(ExpressInstance).put(routeWithParams)
+    const response = await request(ExpressInstance).patch(routeWithParams)
 
     expect(response.statusCode).toBe(404)
     expect(response.body).toBeDefined()
   })
-  test(`responds to  ${UPDATE_ROUTE} ${UPDATE_METHOD} with 204 if no request body is sent`, async () => {
+  test(`responds to  ${UPDATE_METHOD} ${UPDATE_ROUTE}  with 204 if no request body is sent`, async () => {
     const routeWithParams = DELETE_PRODUCT_ROUTE.replace(
       ':productId',
       'FAKE_PRODUCT_ID',
@@ -183,11 +183,11 @@ describe('Product Resource Routes', () => {
       .mockImplementation(ProductsModelMock)
       .mockResolvedValue(productSample)
 
-    const response = await request(ExpressInstance).put(routeWithParams)
+    const response = await request(ExpressInstance).patch(routeWithParams)
 
     expect(response.statusCode).toBe(204)
   })
-  test(`responds to  ${UPDATE_ROUTE} ${UPDATE_METHOD} with 201 if the resource was updated`, async () => {
+  test(`responds to  ${UPDATE_METHOD} ${UPDATE_ROUTE}  with 201 if the resource was updated`, async () => {
     const routeWithParams = DELETE_PRODUCT_ROUTE.replace(
       ':productId',
       'FAKE_PRODUCT_ID',
@@ -211,14 +211,14 @@ describe('Product Resource Routes', () => {
       })
 
     const response = await request(ExpressInstance)
-      .put(routeWithParams)
+      .patch(routeWithParams)
       .send(requestBody)
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toBeDefined()
     expect(response.body).toHaveProperty('product')
   })
-  test(`responds to  ${UPDATE_ROUTE} ${UPDATE_METHOD} with 500 there is an error`, async () => {
+  test(`responds to  ${UPDATE_METHOD} ${UPDATE_ROUTE} with 500 there is an error`, async () => {
     const routeWithParams = DELETE_PRODUCT_ROUTE.replace(
       ':productId',
       'FAKE_PRODUCT_ID',
@@ -235,7 +235,7 @@ describe('Product Resource Routes', () => {
     )
 
     const response = await request(ExpressInstance)
-      .put(routeWithParams)
+      .patch(routeWithParams)
       .send(requestBody)
 
     expect(response.statusCode).toBe(500)

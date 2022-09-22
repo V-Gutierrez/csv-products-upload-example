@@ -144,9 +144,9 @@ export default class ProductsRouter {
    * @returns The route and method of the endpoint.
    */
   update() {
-    const params = { route: '/resources/products/:productId', method: 'PUT' }
+    const params = { route: '/resources/products/:productId', method: 'PATCH' }
 
-    this.app.put(params.route, async (req, res) => {
+    this.app.patch(params.route, async (req, res) => {
       try {
         const { productId } = req.params
         const { category, description, free_shipping, name, price } =
@@ -175,12 +175,10 @@ export default class ProductsRouter {
             newProductData,
           )
 
-          res
-            .status(200)
-            .json({
-              message: 'Product updated successfully',
-              product: updatedProduct,
-            })
+          res.status(200).json({
+            message: 'Product updated successfully',
+            product: updatedProduct,
+          })
         }
       } catch (error) {
         res.status(500).json({ error: 'Error editing product' })
