@@ -23,7 +23,7 @@ describe('Status Router', () => {
     jest.clearAllMocks()
   })
 
-  it(`responds ${GET_JOB_STATUS_METHOD} ${GET_JOB_STATUS_ROUTE} a job when a job id is provided`, async () => {
+  test(`responds ${GET_JOB_STATUS_METHOD} ${GET_JOB_STATUS_ROUTE} a job when a job id is provided`, async () => {
     jest
       .spyOn(ProcessingLogs, 'findFirst')
       .mockImplementation(PrismaClientMock)
@@ -38,7 +38,7 @@ describe('Status Router', () => {
 
     expect(response.statusCode).toBe(200)
   })
-  it(`responds ${GET_JOB_STATUS_METHOD} ${GET_JOB_STATUS_ROUTE} 404 when a job id is provided but there is not any matching log`, async () => {
+  test(`responds ${GET_JOB_STATUS_METHOD} ${GET_JOB_STATUS_ROUTE} 404 when a job id is provided but there is not any matching log`, async () => {
     jest
       .spyOn(ProcessingLogs, 'findFirst')
       .mockImplementation(PrismaClientMock)
