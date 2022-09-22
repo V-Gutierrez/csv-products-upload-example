@@ -30,9 +30,7 @@ export default class ProductsRouter {
 
         res.status(200).json(products)
       } catch (error) {
-        res
-          .status(500)
-          .json({ error: 'An error occurred while getting all products' })
+        res.status(500).json({ error: 'An error occurred while getting all products' })
       }
     })
 
@@ -46,63 +44,45 @@ export default class ProductsRouter {
   uploadProducts() {
     const params = { route: '/resources/products', method: 'POST' }
 
-    this.app.post(
-      params.route,
-      Middlewares.singleFileUpload('products_csv'),
-      async (req, res) => {
-        try {
-          const { file } = req
-          const { 1: fileExtension } =
-            (file?.originalname.split('.') as string[]) ?? {}
+    this.app.post(params.route, Middlewares.singleFileUpload('products_csv'), async (req, res) => {
+      try {
+        const { file } = req
+        const { 1: fileExtension } = (file?.originalname.split('.') as string[]) ?? {}
 
-          if (!file?.filename)
-            res
-              .status(400)
-              .json({ error: 'Invalid request. Upload file is missing' })
-          else if (fileExtension !== 'csv')
-            res.status(400).json({ error: 'Invalid file type.' })
-          else {
-            const jobId = await ProcessingLogsModel.create()
+        if (!file?.filename) {
+          res.status(400).json({ error: 'Invalid request. Upload file is missing' })
+        } else if (fileExtension !== 'csv') {
+          res.status(400).json({ error: 'Invalid file type.' })
+        } else {
+          const jobId = await ProcessingLogsModel.create()
+          const csvUploadRoutine = CSVReader.readFile(file.path, async (err, data) => {
+            try {
+              if (err) throw new Error('Failure reading CSV file')
 
-            /* It's sending the file to a queue for processing. */
-            await Queuer.addToQueue(
-              CSVReader.readFile(file.path, async (err, data) => {
-                try {
-                  if (err) throw new Error('Failure reading CSV file')
+              const csvHeaders = data[0]
+              /* It's validating the CSV file schema. */
+              const isCSVValid = CSVReader.validateSchema(
+                ['lm', 'name', 'free_shipping', 'description', 'price', 'category'],
+                csvHeaders,
+              )
 
-                  const isCSVValid = CSVReader.validateSchema(
-                    [
-                      'lm',
-                      'name',
-                      'free_shipping',
-                      'description',
-                      'price',
-                      'category',
-                    ],
-                    data[0],
-                  )
+              if (!isCSVValid) throw new Error('Invalid CSV file format')
 
-                  if (!isCSVValid) throw new Error('Invalid CSV file format')
+              await ProductsModel.createInBulkWithCSV(data)
+              await ProcessingLogsModel.updateLog(true, jobId as string)
+            } catch (error) {
+              await ProcessingLogsModel.markAsFailed(jobId as string)
+            }
+          })
 
-                  await ProductsModel.createInBulkWithCSV(data)
-                  await ProcessingLogsModel.updateLog(true, jobId as string)
-                } catch (error) {
-                  await ProcessingLogsModel.markAsFailed(jobId as string)
-                }
-              }),
-            )
+          await Queuer.addToQueue(csvUploadRoutine)
 
-            res
-              .status(202)
-              .json({ message: 'File successfully uploaded', jobId })
-          }
-        } catch (error) {
-          res
-            .status(500)
-            .json({ error: 'An error occurred while uploading file' })
+          res.status(202).json({ message: 'File successfully uploaded', jobId })
         }
-      },
-    )
+      } catch (error) {
+        res.status(500).json({ error: 'An error occurred while uploading file' })
+      }
+    })
 
     return params
   }
@@ -149,8 +129,7 @@ export default class ProductsRouter {
     this.app.patch(params.route, async (req, res) => {
       try {
         const { productId } = req.params
-        const { category, description, free_shipping, name, price } =
-          req.body as ProductType
+        const { category, description, free_shipping, name, price } = req.body as ProductType
 
         const newProductData = {
           category,
@@ -161,8 +140,7 @@ export default class ProductsRouter {
         }
 
         const noRequestBodyIsSent =
-          Object.values(newProductData).every((value) => value === undefined) ||
-          !req.body
+          Object.values(newProductData).every((value) => value === undefined) || !req.body
         const product = await ProductsModel.getOne(productId)
 
         if (!product) {
@@ -170,10 +148,7 @@ export default class ProductsRouter {
         } else if (noRequestBodyIsSent) {
           res.sendStatus(204)
         } else {
-          const updatedProduct = await ProductsModel.update(
-            productId,
-            newProductData,
-          )
+          const updatedProduct = await ProductsModel.update(productId, newProductData)
 
           res.status(200).json({
             message: 'Product updated successfully',
