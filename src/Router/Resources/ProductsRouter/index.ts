@@ -144,8 +144,7 @@ export default class ProductsRouter {
           price,
         }
 
-        const noRequestBodyIsSent =
-          Object.values(newProductData).every((value) => value === undefined) || !req.body
+        const noRequestBodyIsSent = Object.values(newProductData).every((value) => value === undefined) || !req.body
         const product = await ProductsModel.getOne(productId)
 
         if (!product) {
