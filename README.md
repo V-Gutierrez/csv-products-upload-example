@@ -9,6 +9,10 @@
 
 - Rode o comando npm run test
 
+#### TODO: 
+ - Implementar Queue com Redis, substituindo atual queue in-memory
+ - Refactorings
+
 ![image](https://user-images.githubusercontent.com/62355596/191846023-9025e3f9-20c8-42bd-89ed-9e56aa93d8f3.png)
 
 ### Documentação da API:
