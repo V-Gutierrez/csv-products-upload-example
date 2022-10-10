@@ -1,7 +1,7 @@
 {
-  "name": "lm-brasil-test",
+  "name": "csv-products-upload-example",
   "version": "1.0.0",
-  "description": "Backend test for Leroy Merlin Brasil",
+  "description": "Backend CSV Product Upload",
   "main": "src/index.js",
   "scripts": {
     "test": "jest --watchAll --coverage --silent --verbose",
