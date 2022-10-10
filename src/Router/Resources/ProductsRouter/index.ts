@@ -51,9 +51,14 @@ export default class ProductsRouter {
 
         if (!file?.filename) {
           res.status(400).json({ error: 'Invalid request. Upload file is missing' })
-        } else if (fileExtension !== 'csv') {
+          return
+        }
+
+        if (fileExtension !== 'csv') {
           res.status(400).json({ error: 'Invalid file type.' })
-        } else {
+          return
+        } 
+        
           const jobId = await ProcessingLogsModel.create()
           const csvUploadRoutine = CSVReader.readFile(file.path, async (err, data) => {
             try {
@@ -78,7 +83,6 @@ export default class ProductsRouter {
           await Queuer.addToQueue(csvUploadRoutine)
 
           res.status(202).json({ message: 'File successfully uploaded', jobId })
-        }
       } catch (error) {
         res.status(500).json({ error: 'An error occurred while uploading file' })
       }
@@ -104,14 +108,15 @@ export default class ProductsRouter {
           res.status(404).json({
             error: 'Product not found',
           })
-        } else {
+          return
+        } 
           await ProductsModel.delete(productId)
 
           res.status(200).json({
             message: `Product ${productId} deleted successfully`,
           })
-        }
-      } catch (error) {
+        
+        } catch (error) {
         res.status(500).json({ error: 'Error deleting product' })
       }
     })
@@ -145,16 +150,19 @@ export default class ProductsRouter {
 
         if (!product) {
           res.status(404).json({ message: 'Product not found' })
-        } else if (noRequestBodyIsSent) {
+          return
+        } 
+        if (noRequestBodyIsSent) {
           res.sendStatus(204)
-        } else {
+          return
+        } 
           const updatedProduct = await ProductsModel.update(productId, newProductData)
 
           res.status(200).json({
             message: 'Product updated successfully',
             product: updatedProduct,
           })
-        }
+          
       } catch (error) {
         res.status(500).json({ error: 'Error editing product' })
       }

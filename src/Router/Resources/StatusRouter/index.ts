@@ -20,8 +20,12 @@ export default class JobsRouter {
 
         const jobStatus = await ProcessingLogsModel.getLog(jobId)
 
-        if (!jobStatus) res.status(404).json({ error: 'Job not found' })
-        else res.status(200).json(jobStatus)
+        if (!jobStatus) {
+          res.status(404).json({ error: 'Job not found' })
+          return
+        }
+
+        res.status(200).json(jobStatus)
       } catch (error) {
         res
           .status(500)
